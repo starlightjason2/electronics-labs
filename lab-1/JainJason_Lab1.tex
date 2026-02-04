@@ -1,0 +1,127 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{siunitx}
+\usepackage{amsmath}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+
+
+\title{Lab 1: Exploring Relationship between Current, Voltage, and Resistance}
+\author{Jason Jain \\ 
+        Oregon State University, Department of Physics \\
+        Electrics Laboratory}
+\date{\today} % Change to specific date if needed
+
+\begin{document}
+
+\maketitle
+
+\section{Current v.s. Voltage Characteristics of Circuit Elements}
+
+\subsection{I-V Curve for a Resistor}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{output/resistor_current_vs_voltage.png}
+    \caption{Best fit line illustrates Ohm's Law for a resistor.}
+    \label{fig:resistor_iv}
+\end{figure}
+
+
+Here we see experimental data values for current vs voltage for a resistor, with a best fit line demonstrating Ohm's Law.
+
+% Put any extra analysis here to explain Fig. 1
+% Example: The linear relationship between current and voltage demonstrates Ohm's law...
+
+\pagebreak
+
+\subsection{I-V Curves for Diodes}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{output/led_current_vs_voltage.png}
+    \caption{Experimental values for LED and diode current/voltage closely follow a logarithmic relationship.}
+    \label{fig:led_iv}
+\end{figure}
+
+
+Here we see experimental data values for current vs voltage for a diode, with a logarithmic best fit demonstrating the relationship between voltage and current. Normally, the current would be on the y-axis and voltage on the x-axis, but this makes the data hard to see at low voltages, so I flipped the axes. I plotted the diode and both the LEDs on the same graph, to observe how they all obey the same functional dependence between voltage $V$, and current $I$:
+
+$$V(I)=V_{T}\,\ln\left( \frac{I}{I_{0}}+1 \right)$$
+
+
+% Put any extra analysis here to explain Figs. 2 and 3
+% Example: The forward bias behavior shows...
+
+\pagebreak
+
+\subsection{Output Voltage of Voltage Dividers}
+
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{output/voltage_divider.png}
+    \caption{The experimental values closely match the theoretical prediction for a voltage divider circuit.}
+    \label{fig:voltage_divider}
+\end{figure}
+
+
+We previously derived the voltage $V_L$ for a voltage divider as a function of load resistance $R_L$. In Figure 3, we see the experimental data is very close to the theoretical prediction. We previously derived the equation for $V_L$ as:
+
+$$
+V_{L}=\frac{R_LR_2 V_S}{(R_2 R_L + R_1 R_L + R_1 R_2)}
+$$
+
+
+
+% Put analysis, equations, etc here, comparing with the problem set results is essential 
+% but no need to reproduce the derivation
+% Example: The voltage divider equation predicts:
+% \begin{equation}
+%     V_{out} = V_{in} \frac{R_2}{R_1 + R_2}
+% \end{equation}
+
+\newpage
+
+\section{Part II: Calculating total resistance of a complex circuit}
+% (e.g. Open Circuit Voltage, and Short Circuit Current Analysis)
+
+Here we see a circuit diagram where calculating the total resistance may not be straightforward. We measure the open circuit voltage and short circuit current to calculate the total resistance of the circuit.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{output/circuit.png}
+    \caption{Computer-generated circuit diagram.}
+\end{figure}
+
+
+% Put analysis, equations, etc here
+% Example: The open circuit voltage was measured as V_OC = ...
+% The short circuit current was measured as I_SC = ...
+
+% No graphs are needed, but be sure to record all values and answer ALL questions from the report.
+
+\textbf{Open Circuit Voltage:} $V_{OC} = \qty{0.661}{\volt} $ 
+
+\textbf{Short Circuit Current:} $I_{SC} = \qty{10.23}{\milli\ampere} $
+
+\textbf{Discussion:} Please note that this is the closest we could get to the short circuit current with our equipment, because the ammeter has some minimum resistance. The total resistance is then,
+
+$$R_T=\frac{0.01023}{0.661-0.580}=\qty{0.126}{\ohm}$$
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{output/total_resistance.png}
+    \caption{Graphical depiction of open circuit voltage and short circuit current. The total resistance is the absolute value of the slope.}
+    \label{fig:circuit}
+\end{figure}
+
+
+
+\end{document}
