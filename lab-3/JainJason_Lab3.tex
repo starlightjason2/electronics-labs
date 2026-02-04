@@ -5,150 +5,74 @@
 \usepackage{amsmath}
 \usepackage{float}
 \usepackage{caption}
-\usepackage{subcaption}
-\usepackage{circuitikz}
 
-
-\title{Lab 2: Transistor Characteristics}
-\author{Jason Jain \\ 
+\title{Lab 3: Capacitors and Time-Dependent Signals}
+\author{Jason Jain \\
         Oregon State University, Department of Physics \\
         Electronics Laboratory}
 \date{\today}
+
+\graphicspath{{output/}}
 
 \begin{document}
 
 \maketitle
 
-\section{Transistor Characteristics}
+\section{Time-dependent analysis of RC circuits}
 
+% \ref{fig:low_pass_1kHz}
 \begin{figure}[H]
     \centering
-    \begin{circuitikz}[scale=1]
-        % Transistor
-        \draw (0,0) node[npn] (T) {};
-        
-        % Collector circuit
-        \draw (T.collector) to[leDo, invert] (0,2) to[short] (0,2.5) node[above] {+5V};
-        
-        % Base circuit
-        \draw (-2,2.5) node[above] {+5V} to[R, l=10k$\Omega$] (-2,0) to[short] (T.base);
-        \draw (-2,0) to[short] (-2,-1.5) node[ground] {};
-        
-
-        % Emitter
-        \draw (T.emitter) to[R, l=220$\Omega$] (0,-1.5) node[ground] {};
-    \end{circuitikz}
-    \caption{Transistor measurement circuit for determining current gain and base-emitter characteristics.}
-    \label{fig:transistor_circuit}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.6\textwidth]{transistor_current_characteristics.png}
-    \caption{Linear relationship between base current and collector current demonstrates transistor amplification.}
-    \label{fig:transistor_current}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.6\textwidth]{collector_current_vs._base-emitter_voltage.png}
-    \caption{Voltage vs current shows beginning of an exponential diode curve relationship, but outliers and issues in measurement seem to affect the shape of the curve. }
-    \label{fig:base_emitter}
-\end{figure}
-
-
-
-Using the circuit in Figure 1, we measure a linear relationship between collector current $I_C$ and base current $I_B$. The slope of the line in Figure 2 gives us the current gain factor $\beta=128.66$, obtained from the best fit line in the graph. The high collector current allows us to use the transistor as an amplifier, amd demonstrates the current amplification property.
-
-We were unsure why both curves have a negative slope, but the shape of the data looks correct, overall. The diode curve looks similar to previous exponential diode curves, but behaves odd as the voltage approaches the extreme ends on either side. A mistake in measurement could have flipped the data values. We brought it up with Professor Graham, but he was also unsure. 
-
-
-
-
-\newpage
-
-
-\section{Logic Gates}
-
-
-
-We built an SR Latch and an AND gate to create a simple 1-bit computer. The AND gate outputs a $1$ when both the buttons are pressed. That result is sent to one of the inputs of the SR latch, causing its metastable state to switch, and storing the result of our AND operation in 1-bit memory. The latch persists its state even when the switch isn't pressed, but clears its state when power is cut. 
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.5\textwidth]{complete_circuit.jpeg}
-    \caption{Complete circuit showing AND gate and SR latch components before connection.}
-    \label{fig:complete_circuit}
-\end{figure} 
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.5\textwidth]{and_gate_to_latch.jpeg}
-    \caption{Demonstration of write to memory operation - AND gate output connected to SR latch input.}
-    \label{fig:memory_write}
+    \includegraphics[width=0.85\textwidth]{low_pass_square_1kHz.png}
+    \caption{Measurement of time constact $\tau = RC$ by determining the time for the output to drop to $1/e$ of the
+    maximum (in green)and to rise to $1 - (1/e)$ of the maximum (in red). Both values are equal to $\tau = \qty{62}{\micro\second}$.}
+    \label{fig:low_pass_1kHz}
 \end{figure}
 
 \newpage
 
-\subsection{AND Gate}
+\section{The RC Integrator (Low-Pass Filter)}
 
-The AND gate uses two cascaded NPN transistors in series. Both switches A and B must be closed to provide base current to both transistors, allowing current to flow through the LED. AND gates are elementary logic gates that function as building blocks of computers, along with OR, NOT, etc. 
-
+- Use the circuit of Part 1 and apply a 20 kHz square-wave signal.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\textwidth]{and_gate.jpeg}
-    \caption{AND gate circuit implementation. Output LED is lit when both buttons pressed.}
-    \label{fig:and_gate}
+    \includegraphics[width=0.85\textwidth]{low_pass_square_20kHz.png}
+    \caption{RC integrator (low-pass filter): voltage vs time (20 kHz square input).}
+    \label{fig:low_pass_20kHz}
 \end{figure}
 
+- Explain how the observed waveform is consistent with the concept of an RC circuit behaving as an integrator.
 
+- Over what frequency range does the circuit behave as an integrator, that is, is capable of producing a triangle-wave output from a square-wave input? Explain why this circuit is also known as a low-pass filter.
 
-\subsubsection{AND Gate Truth Table}
-
-\begin{center}
-\begin{tabular}{|c|c||c|}
-\hline
-\textbf{A} & \textbf{B} & \textbf{Q} \\
-\hline
-0 & 0 & 0 \\
-0 & 1 & 0 \\
-1 & 0 & 0 \\
-1 & 1 & 1 \\
-\hline
-\end{tabular}
-\end{center}
+- TODO: Apply a triangle wave input at 200 kHz and explain the observed waveform
 
 \newpage
 
+\section{The CR Differentiator (High-Pass Filter)}
 
-\subsection{SR-Latch}
+- Vary the frequency of the square wave input from 1 Hz to 1 MHz and describe the behavior of this circuit. Does it ever appear to behave as an integrator or a differentiator? Explain why this circuit is also known as a high-pass filter.
 
-
-The SR latch uses two cross-coupled NPN transistors where each transistor's base connects to the opposite transistor's collector through 10k$\Omega$ resistors. SR latches can function as building blocks of computer RAM. The cross-coupled design creates a metastable circuit with two stable states, storing one bit of information indefinitely (while powered). 
 
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\textwidth]{sr_toggled.jpeg}
-    \caption{SR-Latch circuit toggled to $1$ state.}
-    \label{fig:sr_latch}
+    \includegraphics[width=0.85\textwidth]{high_pass_square_510Hz.png}
+    \caption{High-pass filter: voltage vs time (510 Hz square input).}
+    \label{fig:high_pass_510Hz}
 \end{figure}
 
-\subsubsection{SR-Latch Truth Table}
+- TODO: Apply a triangle-wave input at 200 Hz and explain the observed waveform.
 
-\begin{center}
-\begin{tabular}{|c|c||c|c|}
-\hline
-\textbf{S} & \textbf{R} & \textbf{Q} & \textbf{Q'} \\
-\hline
-0 & 0 & Hold & Hold \\
-1 & 0 & 1 & 0 \\
-0 & 1 & 0 & 1 \\
-1 & 1 & Invalid & Invalid \\
-\hline
-\end{tabular}
-\end{center}
+\newpage
 
+\section{Frequency response of both low-pass and high-pass filters}
+
+The goal of this experiment is to measure the frequency dependence of each filter's response to a sine wave input. Measure both the amplitude and phase shift of the filter output relative to the input signal. Set the function generator to provide a sine wave with no offset. Manually vary the frequency from \qty{1}{\hertz} to \qty{1}{\mega\hertz} and observe the variation in amplitude and phase of the output relative to the input. Make a series of at least 20 measurements over the full frequency range. Because you will be plotting your data on a logarithmic plot, make at least two measurements per decade of frequency.
+
+Determine the transmission function $A(\nu)$ by dividing the output amplitude by the input amplitude. Be sure to measure the input amplitude from the function generator at each frequency, because the combination of your circuit and the limitations of the generator may lead to a signal that changes in amplitude with frequency. Measure the phase difference $\phi(\nu)$ between the output and input signals. A good point on the waveform to use for such measurements is the point at which the trace crosses 0~V (i.e.\ ground). If the period of the input signal is $T$ and the displacement of the output signal zero-crossing from the input signal zero-crossing is $t$, then the phase difference is $\phi = 2\pi t / T$. If the output signal zero-crossing occurs after the input signal zero-crossing, then that is a phase lag or a negative phase.
+
+For each filter, plot the data and theoretical curves together. For the amplitude plots, use the decibel (dB) scale $20\log_{10} A(\nu)$ for the vertical axis and $\log \nu$ for the horizontal axis (as in Fig.~4). For the phase plots, use a linear vertical axis for the phase and $\log \nu$ for the horizontal axis (as in Fig.~5). Determine the breakpoint or characteristic frequency from the data plots by identifying the $-3$~dB point on the amplitude plot (also known as a Bode plot) and the \ang{45} point of the phase plot.
 
 \end{document}
