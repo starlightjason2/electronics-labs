@@ -19,12 +19,11 @@ from pathlib import Path
 from scipy import constants as sc
 
 from utils.paths import get_paths
-from utils.utils import frequency_of_square_wave
+from utils.utils import load_oscilloscope_data
 
 paths = get_paths(__file__)
 DATA_FILE = "low_pass_square_1kHz"
 ureg = pint.UnitRegistry()
-Q_ = ureg.Quantity
 
 
 def find_closest(series: pd.Series[float], target_value: float) -> int:
@@ -32,25 +31,11 @@ def find_closest(series: pd.Series[float], target_value: float) -> int:
     return int(series.sub(target_value).abs().idxmin())
 
 
-# part 1 data (assume time in s, voltage in V from CSV)
-voltage_df = pd.read_csv(paths.data_dir / f"{DATA_FILE}.csv")
-
-# Offset time so minimum is 0, then convert s → μs (factor from pint)
-s_to_us = (1.0 * ureg.second).to(ureg.microsecond).magnitude
-voltage_df["t_in"] = (voltage_df["t_in"] - voltage_df["t_in"].min()) * s_to_us
-voltage_df["t_out"] = (voltage_df["t_out"] - voltage_df["t_out"].min()) * s_to_us
-
-# Shift voltage so minimum is 0 (keep in V)
+voltage_df = load_oscilloscope_data(DATA_FILE, paths.data_dir)
 voltage_df["v_in"] = voltage_df["v_in"] - voltage_df["v_in"].min()
 voltage_df["v_out"] = voltage_df["v_out"] - voltage_df["v_out"].min()
 
-freq_Hz, _ = frequency_of_square_wave(voltage_df["t_in"], voltage_df["v_in"])
-freq_str = f"{freq_Hz/1000:.0f} kHz" if freq_Hz >= 1000 else f"{round(freq_Hz):.0f} Hz"
-
-# Create the plot
 plt.figure(figsize=(10, 6))
-
-# Plot the data
 plt.plot(voltage_df["t_in"], voltage_df["v_in"], label="Voltage In", color="goldenrod")
 plt.plot(voltage_df["t_out"], voltage_df["v_out"], label="Voltage Out", color="blue")
 
@@ -77,7 +62,7 @@ plt.plot(
     linestyle="--",
     alpha=0.7,
 )
-tau1 = (tau_charge_time - charge_start_time) * ureg.microsecond
+tau1 = ureg.Quantity(tau_charge_time - charge_start_time, ureg.microsecond)
 plt.text(
     tau_charge_time + 100,
     tau_charge_volt,
@@ -112,7 +97,7 @@ plt.plot(
     linestyle="--",
     alpha=0.7,
 )
-tau2 = (tau_discharge_time - discharge_start_time) * ureg.microsecond
+tau2 = ureg.Quantity(tau_discharge_time - discharge_start_time, ureg.microsecond)
 plt.text(
     tau_discharge_time + 100,
     tau_discharge_volt,
@@ -122,7 +107,6 @@ plt.text(
 )
 
 
-plt.title(f"Voltage vs Time (1 kHz input)")
 plt.xlabel(r"Time $t$ (μs)")
 plt.ylabel(r"Voltage Out $V_{\mathrm{Out}}$ (V)")
 plt.legend(loc="lower right")

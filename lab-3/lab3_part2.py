@@ -19,40 +19,28 @@ from pathlib import Path
 from scipy import constants as sc
 
 from utils.paths import get_paths
-from utils.utils import frequency_of_square_wave
+from utils.utils import load_oscilloscope_data, plot_oscilloscope_data
 
 paths = get_paths(__file__)
+
 DATA_FILE = "high_pass_square_510Hz"
-ureg = pint.UnitRegistry()
-Q_ = ureg.Quantity
+voltage_df = load_oscilloscope_data(DATA_FILE, paths.data_dir)
+plot_oscilloscope_data(
+    voltage_df["t_in"],
+    voltage_df["v_in"],
+    voltage_df["t_out"],
+    voltage_df["v_out"],
+    DATA_FILE,
+    paths.output_dir,
+)
 
-voltage_df = pd.read_csv(paths.data_dir / f"{DATA_FILE}.csv")
-
-# Offset time so minimum is 0, then convert s → μs (factor from pint)
-s_to_us = (1.0 * ureg.second).to(ureg.microsecond).magnitude
-voltage_df["t_in"] = (voltage_df["t_in"] - voltage_df["t_in"].min()) * s_to_us
-voltage_df["t_out"] = (voltage_df["t_out"] - voltage_df["t_out"].min()) * s_to_us
-
-
-# Frequency of input voltage
-freq_Hz, _ = frequency_of_square_wave(voltage_df["t_in"], voltage_df["v_in"])
-freq_str = f"{freq_Hz/1000:.0f} kHz" if freq_Hz >= 1000 else f"{round(freq_Hz):.0f} Hz"
-
-# Create the plot
-plt.figure(figsize=(10, 6))
-
-# Plot the data
-plt.plot(voltage_df["t_in"], voltage_df["v_in"], label="Voltage In", color="goldenrod")
-plt.plot(voltage_df["t_out"], voltage_df["v_out"], label="Voltage Out", color="blue")
-
-
-plt.title(f"Voltage vs Time (510 Hz input)")
-plt.xlabel(r"Time $t$ (μs)")
-plt.ylabel(r"Voltage Out $V_{\mathrm{Out}}$ (V)")
-plt.legend(loc="lower right")
-plt.grid(True, alpha=0.3)
-paths.output_dir.mkdir(exist_ok=True)
-plt.savefig(paths.output_dir / f"{DATA_FILE}.png", dpi=150)
-plt.show()
-
-# TODO: apply triaangle wave to input
+DATA_FILE = "high_pass_triangle_200Hz"
+voltage_df = load_oscilloscope_data(DATA_FILE, paths.data_dir)
+plot_oscilloscope_data(
+    voltage_df["t_in"],
+    voltage_df["v_in"],
+    voltage_df["t_out"],
+    voltage_df["v_out"],
+    DATA_FILE,
+    paths.output_dir,
+)
