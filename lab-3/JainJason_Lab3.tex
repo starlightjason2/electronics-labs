@@ -20,6 +20,8 @@
 
 \section{Time-dependent analysis of RC circuits}
 
+The resistance is $\qty{997}{\ohm}$ and the capacitance is $\qty{73.5}{\farad}$
+
 % \ref{fig:low_pass_1kHz}
 \begin{figure}[H]
     \centering
@@ -35,6 +37,11 @@
 
 - Use the circuit of Part 1 and apply a 20 kHz square-wave signal.
 
+- Explain how the observed waveform is consistent with the concept of an RC circuit behaving as an integrator.
+
+- Over what frequency range does the circuit behave as an integrator, that is, is capable of producing a triangle-wave output from a square-wave input? Explain why this circuit is also known as a low-pass filter.
+
+
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.85\textwidth]{low_pass_square_20kHz.png}
@@ -42,15 +49,20 @@
     \label{fig:low_pass_20kHz}
 \end{figure}
 
-- Explain how the observed waveform is consistent with the concept of an RC circuit behaving as an integrator.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{low_pass_triangle_200kHz.png}
+    \caption{RC integrator (low-pass filter): voltage vs time (200 kHz triangle input).}
+    \label{fig:low_pass_20kHz}
+\end{figure}
 
-- Over what frequency range does the circuit behave as an integrator, that is, is capable of producing a triangle-wave output from a square-wave input? Explain why this circuit is also known as a low-pass filter.
-
-- TODO: Apply a triangle wave input at 200 kHz and explain the observed waveform
 
 \newpage
 
 \section{The CR Differentiator (High-Pass Filter)}
+
+- Explain how the observed waveform is consistent with the concept of an CR circuit behaving as an differentiator.
+
 
 - Vary the frequency of the square wave input from 1 Hz to 1 MHz and describe the behavior of this circuit. Does it ever appear to behave as an integrator or a differentiator? Explain why this circuit is also known as a high-pass filter.
 
@@ -63,7 +75,14 @@
     \label{fig:high_pass_510Hz}
 \end{figure}
 
-- TODO: Apply a triangle-wave input at 200 Hz and explain the observed waveform.
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{high_pass_triangle_200Hz.png}
+    \caption{RC integrator (high-pass filter): voltage vs time (200 Hz triangle input).}
+    \label{fig:low_pass_20kHz}
+\end{figure}
 
 \newpage
 
@@ -73,6 +92,34 @@ The goal of this experiment is to measure the frequency dependence of each filte
 
 Determine the transmission function $A(\nu)$ by dividing the output amplitude by the input amplitude. Be sure to measure the input amplitude from the function generator at each frequency, because the combination of your circuit and the limitations of the generator may lead to a signal that changes in amplitude with frequency. Measure the phase difference $\phi(\nu)$ between the output and input signals. A good point on the waveform to use for such measurements is the point at which the trace crosses 0~V (i.e.\ ground). If the period of the input signal is $T$ and the displacement of the output signal zero-crossing from the input signal zero-crossing is $t$, then the phase difference is $\phi = 2\pi t / T$. If the output signal zero-crossing occurs after the input signal zero-crossing, then that is a phase lag or a negative phase.
 
-For each filter, plot the data and theoretical curves together. For the amplitude plots, use the decibel (dB) scale $20\log_{10} A(\nu)$ for the vertical axis and $\log \nu$ for the horizontal axis (as in Fig.~4). For the phase plots, use a linear vertical axis for the phase and $\log \nu$ for the horizontal axis (as in Fig.~5). Determine the breakpoint or characteristic frequency from the data plots by identifying the $-3$~dB point on the amplitude plot (also known as a Bode plot) and the \ang{45} point of the phase plot.
+For each filter, plot the data and theoretical curves together. For the amplitude plots, use the decibel (dB) scale $20\log_{10} A(\nu)$ for the vertical axis and $\log \nu$ for the horizontal axis (as in Fig.~4). 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{low_pass_bode_plot.png}
+    \caption{Low-pass filter: bode plot}
+    \label{fig:low_pass_bode_plot}
+\end{figure}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{high_pass_bode_plot.png}
+    \caption{High-pass filter: bode plot}
+    \label{fig:high_pass_bode_plot}
+\end{figure}
+
+\subsection{Phase}
+
+For the phase plots, use a linear vertical axis for the phase and $\log \nu$ for the horizontal axis (as in Fig.~5). Determine the breakpoint or characteristic frequency from the data plots by identifying the $-3$~dB point on the amplitude plot (also known as a Bode plot) and the \ang{45} point of the phase plot.
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{low_pass_phase_plot.png}
+    \caption{High-pass filter: phase plot}
+    \label{fig:low_pass_phase_plot}
+\end{figure}
+
 
 \end{document}
