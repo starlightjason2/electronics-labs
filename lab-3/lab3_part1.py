@@ -19,17 +19,11 @@ from pathlib import Path
 from scipy import constants as sc
 
 from utils.paths import get_paths
-from utils.utils import load_oscilloscope_data
+from utils.utils import load_oscilloscope_data, calculate_charge_tau, calculate_discharge_tau
 
 paths = get_paths(__file__)
 DATA_FILE = "low_pass_square_1kHz"
 ureg = pint.UnitRegistry()
-
-
-def find_closest(series: pd.Series[float], target_value: float) -> int:
-    """Find the index of the value closest to target_value in the series."""
-    return int(series.sub(target_value).abs().idxmin())
-
 
 voltage_df = load_oscilloscope_data(DATA_FILE, paths.data_dir)
 voltage_df["v_in"] = voltage_df["v_in"] - voltage_df["v_in"].min()
@@ -42,17 +36,10 @@ plt.plot(voltage_df["t_out"], voltage_df["v_out"], label="Voltage Out", color="b
 charge_start_idx = 1
 charge_end_idx = 252
 charge_start_time = float(voltage_df["t_out"].iloc[charge_start_idx])
-charge_start_volt = float(voltage_df["v_out"].iloc[charge_start_idx])
-charge_end_time = float(voltage_df["t_out"].iloc[charge_end_idx])
-charge_end_volt = float(voltage_df["v_out"].iloc[charge_end_idx])
 
-# Find time at tau voltage level for drop
-tau_charge_volt_calc = (1 - (1 / math.e)) * charge_end_volt
-tau_charge_volt_idx = find_closest(
-    voltage_df["v_out"][charge_start_idx:charge_end_idx], tau_charge_volt_calc
+tau_charge_time, tau_charge_volt, tau_charge_volt_calc = calculate_charge_tau(
+    voltage_df["t_out"], voltage_df["v_out"], charge_start_idx, charge_end_idx
 )
-tau_charge_time = float(voltage_df["t_out"].iloc[tau_charge_volt_idx])
-tau_charge_volt = float(voltage_df["v_out"].iloc[tau_charge_volt_idx])
 
 plt.plot(tau_charge_time, tau_charge_volt_calc, "ro")
 plt.plot(
@@ -72,21 +59,13 @@ plt.text(
 )
 
 
-# Second half starts from drop_idx
 discharge_start_idx = 253
 discharge_end_idx = 502
 discharge_start_time = float(voltage_df["t_out"].iloc[discharge_start_idx])
-discharge_start_volt = float(voltage_df["v_out"].iloc[discharge_start_idx])
-discharge_end_time = float(voltage_df["t_out"].iloc[discharge_end_idx])
-discharge_end_volt = float(voltage_df["v_out"].iloc[discharge_end_idx])
 
-tau_discharge_volt_calc = (1 / math.e) * discharge_start_volt
-tau_discharge_idx = find_closest(
-    voltage_df["v_out"].iloc[discharge_start_idx:discharge_end_idx],
-    tau_discharge_volt_calc,
+tau_discharge_time, tau_discharge_volt, tau_discharge_volt_calc = calculate_discharge_tau(
+    voltage_df["t_out"], voltage_df["v_out"], discharge_start_idx, discharge_end_idx
 )
-tau_discharge_volt = float(voltage_df["v_out"].iloc[tau_discharge_idx])
-tau_discharge_time = float(voltage_df["t_out"].iloc[tau_discharge_idx])
 
 
 plt.plot(tau_discharge_time, tau_discharge_volt, "go")

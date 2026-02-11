@@ -66,3 +66,44 @@ def plot_oscilloscope_data(
     output_dir.mkdir(exist_ok=True)
     plt.savefig(output_dir / f"{file_out}.png", dpi=150)
     plt.show()
+
+
+def find_closest_index(series: pd.Series[float], target_value: float) -> int:
+    """Find the index of the value closest to target_value in the series."""
+    return int(series.sub(target_value).abs().idxmin())
+
+
+def calculate_charge_tau(
+    time_series: pd.Series,
+    voltage_series: pd.Series,
+    start_idx: int,
+    end_idx: int,
+) -> tuple[float, float, float]:
+    """Calculate tau for charging phase.
+
+    Returns: (tau_time, tau_voltage, tau_voltage_calc)
+    """
+    end_volt = float(voltage_series.iloc[end_idx])
+    tau_volt_calc = np.round((1 - (1 / np.e)) * end_volt, 3)
+    tau_idx = find_closest_index(voltage_series[start_idx:end_idx], tau_volt_calc)
+    tau_time = float(time_series.iloc[tau_idx])
+    tau_volt = float(voltage_series.iloc[tau_idx])
+    return (tau_time, tau_volt, tau_volt_calc)
+
+
+def calculate_discharge_tau(
+    time_series: pd.Series,
+    voltage_series: pd.Series,
+    start_idx: int,
+    end_idx: int,
+) -> tuple[float, float, float]:
+    """Calculate tau for discharging phase.
+
+    Returns: (tau_time, tau_voltage, tau_voltage_calc)
+    """
+    start_volt = float(voltage_series.iloc[start_idx])
+    tau_volt_calc = np.round((1 / np.e) * start_volt, 3)
+    tau_idx = find_closest_index(voltage_series[start_idx:end_idx], tau_volt_calc)
+    tau_time = float(time_series.iloc[tau_idx])
+    tau_volt = float(voltage_series.iloc[tau_idx])
+    return (tau_time, tau_volt, tau_volt_calc)
