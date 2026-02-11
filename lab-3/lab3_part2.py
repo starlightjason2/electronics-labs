@@ -40,7 +40,7 @@ plot_oscilloscope_data(
     voltage_df["t_in"],
     voltage_df["v_in"],
     voltage_df["t_out"],
-    voltage_df["v_out"],
+    voltage_df["v_out"] * 3,
     DATA_FILE,
     paths.output_dir,
 )

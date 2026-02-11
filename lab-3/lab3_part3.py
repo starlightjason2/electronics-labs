@@ -40,7 +40,7 @@ triange_wave_df = load_oscilloscope_data("low_pass_triangle_200kHz", paths.data_
 plot_oscilloscope_data(
     time_in=triange_wave_df["t_in"],
     voltage_in=triange_wave_df["v_in"],
-    voltage_out=triange_wave_df["v_out"],
+    voltage_out=triange_wave_df["v_out"] * 10,
     time_out=triange_wave_df["t_out"],
     file_out="low_pass_triangle_200kHz",
     output_dir=paths.output_dir,
