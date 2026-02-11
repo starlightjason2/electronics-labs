@@ -20,7 +20,9 @@
 
 \section{Time-dependent analysis of RC circuits}
 
-The resistance is $\qty{997}{\ohm}$ and the capacitance is $\qty{73.5}{\farad}$
+We measure the time constant of the RC circuit, first calculating the theoretical value, then comparing it to the experimental value. The resistance is $R=\qty{997}{\ohm}$ and the capacitance is $C=\qty{73.5}{\farad}$, giving us a theoretical time constant of $\tau=\qty{73.5}{\micro\sec}$. Our experimental value is found by observing the time it takes for the capacitor to reach $1 / e$ of it's total charge while discharging, and $1 - (1 / e)$ of it's total charge while charging. As seen above, the experimental value is $\qty{62}{\micro\sec}$
+
+The discrepancy is likely because of issues in measurement. The experimental value is used in all further calculations in this lab.  
 
 % \ref{fig:low_pass_1kHz}
 \begin{figure}[H]
@@ -35,7 +37,9 @@ The resistance is $\qty{997}{\ohm}$ and the capacitance is $\qty{73.5}{\farad}$
 
 \section{The RC Integrator (Low-Pass Filter)}
 
-- Use the circuit of Part 1 and apply a 20 kHz square-wave signal.
+We apply a $\qty{20}{\kilo\hertz}$ square-wave signal to the RC circuit to create a low pass filter. The waveform, seen in Figure 2, demonstrates the integrator behavior of this circuit. Please note that the output voltage is scaled to make the behavior more obvious. 
+
+The 
 
 - Explain how the observed waveform is consistent with the concept of an RC circuit behaving as an integrator.
 

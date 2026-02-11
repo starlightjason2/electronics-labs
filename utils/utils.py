@@ -107,3 +107,78 @@ def calculate_discharge_tau(
     tau_time = float(time_series.iloc[tau_idx])
     tau_volt = float(voltage_series.iloc[tau_idx])
     return (tau_time, tau_volt, tau_volt_calc)
+
+
+
+def plot_tau_charging(
+    ax,
+    time_series: pd.Series,
+    voltage_series: pd.Series,
+    start_idx: int,
+    end_idx: int,
+    color: str = "red",
+    time_unit: str = "microsecond",
+) -> float:
+    """Plot tau measurement for charging phase.
+    
+    Returns: tau value in specified time units
+    """
+    ureg = pint.UnitRegistry()
+    start_time = float(time_series.iloc[start_idx])
+    tau_time, tau_volt, tau_volt_calc = calculate_charge_tau(
+        time_series, voltage_series, start_idx, end_idx
+    )
+    tau = ureg.Quantity(tau_time - start_time, getattr(ureg, time_unit))
+    
+    ax.plot(
+        tau_time,
+        tau_volt_calc,
+        "o",
+        color=color,
+        label=f"$\\tau = {tau.magnitude:.1f}$ μs",
+    )
+    ax.plot(
+        [start_time, tau_time],
+        [tau_volt, tau_volt],
+        color=color,
+        linestyle="--",
+        alpha=0.7,
+    )
+    return tau.magnitude
+
+
+def plot_tau_discharging(
+    ax,
+    time_series: pd.Series,
+    voltage_series: pd.Series,
+    start_idx: int,
+    end_idx: int,
+    color: str = "green",
+    time_unit: str = "microsecond",
+) -> float:
+    """Plot tau measurement for discharging phase.
+    
+    Returns: tau value in specified time units
+    """
+    ureg = pint.UnitRegistry()
+    start_time = float(time_series.iloc[start_idx])
+    tau_time, tau_volt, tau_volt_calc = calculate_discharge_tau(
+        time_series, voltage_series, start_idx, end_idx
+    )
+    tau = ureg.Quantity(tau_time - start_time, getattr(ureg, time_unit))
+    
+    ax.plot(
+        tau_time,
+        tau_volt_calc,
+        "o",
+        color=color,
+        label=f"$\\tau = {tau.magnitude:.1f}$ μs",
+    )
+    ax.plot(
+        [start_time, tau_time],
+        [tau_volt, tau_volt],
+        color=color,
+        linestyle="--",
+        alpha=0.7,
+    )
+    return tau.magnitude
