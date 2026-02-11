@@ -14,6 +14,7 @@
 *.vrb
 *.bcf
 *.run.xml
+*.pdf
 
 # Python
 __pycache__/

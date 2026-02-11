@@ -261,7 +261,7 @@ def create_phase_plot(
     if filter_type == "high":
         phase_theoretical = high_pass_phase_theoretical(omega_values, omega_c)
         eq_text = r"$\phi(f) = \arctan\left(\dfrac{f_c}{f}\right)$"
-    elif filter_type == "low":
+    else:  # low
         phase_theoretical = low_pass_phase_theoretical(omega_values, omega_c)
         eq_text = r"$\phi(f) = -\arctan\left(\dfrac{f}{f_c}\right)$"
 
