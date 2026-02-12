@@ -23,7 +23,7 @@ from utils.utils import load_oscilloscope_data, plot_tau_charging, plot_tau_disc
 
 paths = get_paths(__file__)
 
-low_pass_df = load_oscilloscope_data("low_pass_square_5kHz", paths.data_dir)
+low_pass_df = load_oscilloscope_data("low_pass_square_wave_10kHz", paths.data_dir)
 low_pass_df["v_in"] = low_pass_df["v_in"] - low_pass_df["v_in"].min()
 low_pass_df["v_out"] = low_pass_df["v_out"] - low_pass_df["v_out"].min()
 
@@ -39,10 +39,10 @@ ax.set_ylabel(r"Voltage Out $V_{\mathrm{Out}}$ (V)")
 ax.legend(loc="lower right")
 ax.grid(True, alpha=0.3)
 paths.output_dir.mkdir(exist_ok=True)
-plt.savefig(paths.output_dir / f"low_pass_square_5kHz.png", dpi=150)
+plt.savefig(paths.output_dir / f"low_pass_square_wave_10kHz.png", dpi=150)
 
 
-high_pass_df = load_oscilloscope_data("high_pass_square_200Hz", paths.data_dir)
+high_pass_df = load_oscilloscope_data("high_pass_square_wave_10kHz", paths.data_dir)
 high_pass_df["v_in"] = high_pass_df["v_in"] - high_pass_df["v_in"].min()
 high_pass_df["v_out"] = high_pass_df["v_out"] - high_pass_df["v_out"].min()
 
@@ -60,4 +60,4 @@ ax.set_ylabel(r"Voltage Out $V_{\mathrm{Out}}$ (V)")
 ax.legend(loc="upper right")
 ax.grid(True, alpha=0.3)
 paths.output_dir.mkdir(exist_ok=True)
-plt.savefig(paths.output_dir / f"high_pass_square_200Hz.png", dpi=150)
+plt.savefig(paths.output_dir / f"high_pass_square_wave_10kHz.png", dpi=150)

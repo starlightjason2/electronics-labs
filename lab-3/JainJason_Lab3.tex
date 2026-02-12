@@ -1,5 +1,5 @@
 \documentclass[11pt]{article}
-\usepackage[margin=0.5in]{geometry}
+\usepackage[margin=1in]{geometry}
 \usepackage{graphicx}
 \usepackage{siunitx}
 \usepackage{amsmath}
@@ -35,25 +35,26 @@ The discrepancy is likely due to measurement uncertainties and tolerances in the
 
 \section{The RC Integrator (Low-Pass Filter)}
 
-We apply a \qty{20}{\kilo\hertz} square-wave signal to the RC circuit to create a low-pass filter. The waveform, seen in Figure~\ref{fig:low_pass_20kHz}, demonstrates the integrator behavior of this circuit. The graph of voltage out is the integral of the voltage in. We can model the input $V_{\mathrm{in}}$ as alternating lines of $y=\pm1$, so the output integral $V_{\mathrm{out}}$ is simply $\pm\int{1\,dx}=\pm x+C$, creating the triangle wave pattern of the output voltage.
+An RC circuit is also called a low pass filter, allowing frequencies below the cutoff frequency to pass relatively unchanged. The circuit is also called an integrator because the graph of voltage out is the integral of the voltage in. The integrator filter is applied to the high frequencies and greatly reduces signal strength. 
+
+
+The low pass behavior is most evident for frequencies seen in Figure~\ref{fig:low_pass_20kHz}, where we can graph $V_{\mathrm{out}}$ at a frequency of $f=\qty{20}{\kilo\hertz}$ without any scaling. As we approach the \qty{200}{\kilo\hertz} frequency range, the output is so small that we need to scale it 10$\times$ to be noticeable at all.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.85\textwidth]{output/low_pass_square_20kHz.png}
-    \caption{RC integrator (low-pass filter): voltage vs time (20~kHz square input).}
+    \caption{RC integrator (low-pass filter): voltage vs time (20~kHz square input). We can model the input $V_{\mathrm{in}}$ as alternating lines of $y=\pm1$, so the output integral $V_{\mathrm{out}}$ is simply $\pm\int{1\,dx}=\pm x+C$, creating the triangle wave pattern of the output voltage.}
     \label{fig:low_pass_20kHz}
 \end{figure}
 
-In Figure~\ref{fig:low_pass_triangle_200kHz}, we see the result of applying a \qty{200}{\kilo\hertz} triangle wave input to the low-pass filter. The triangle wave input $V_{\mathrm{in}}$ can be modeled as alternating curves of $y=\pm mx$. The integral of the input voltage is now $\pm\int{mx\,dx}=\pm\frac{1}{2}mx^2+C$, with a concave-up parabola when the input is increasing, and a concave-down parabola when the input is decreasing. 
-
-This circuit is called a low-pass filter because it allows frequencies below the cutoff frequency to pass relatively unchanged, while applying the integrator behavior to the high frequencies and greatly reducing signal strength. This behavior is most evident in Figure~\ref{fig:low_pass_20kHz}, where we can graph $V_{\mathrm{out}}$ at a frequency of $f=\qty{20}{\kilo\hertz}$ without any scaling. As we approach the \qty{200}{\kilo\hertz} frequency range, the output is so small that we need to scale it 10$\times$ to be noticeable at all.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.85\textwidth]{output/low_pass_triangle_200kHz.png}
-    \caption{RC integrator (low-pass filter): voltage vs time (200~kHz triangle input). Most of the signal is filtered out due to the high input frequency, so the output voltage is scaled by a factor of 10 to make the integrator behavior more obvious.}
+    \caption{RC integrator (low-pass filter): voltage vs time (200~kHz triangle input). Most of the signal is filtered out due to the high input frequency, so the output voltage is scaled by a factor of 10 to make the integrator behavior more obvious. The triangle wave input $V_{\mathrm{in}}$ can be modeled as alternating curves of $y=\pm mx$. The integral of the input voltage is now $\pm\int{mx\,dx}=\pm\frac{1}{2}mx^2+C$, with a concave-up parabola when the input is increasing, and a concave-down parabola when the input is decreasing. }
     \label{fig:low_pass_triangle_200kHz}
 \end{figure}
+
 
 \section{The CR Differentiator (High-Pass Filter)}
 
@@ -77,9 +78,14 @@ The waveform, seen in Figure~\ref{fig:high_pass_510Hz}, demonstrates the differe
 
 Likewise, in Figure~\ref{fig:high_pass_triangle_200Hz}, we can model the triangle wave input $V_{\mathrm{in}}$ as alternating curves of $y=\pm mx$. The output derivative is $\pm\frac{d}{dx}mx=\pm m$, approaching a square wave pattern. As we approach lower frequencies, we lose signal strength, so the data becomes increasingly noisy. For higher frequencies in the \qty{100}{\kilo\hertz}--\qty{1}{\mega\hertz} range, the output and input would closely resemble one another, and the differentiator behavior would be absent.
 
+
 \section{Frequency response of both low-pass and high-pass filters}
 
 We explored the frequency dependence of each filter's response to a sine wave input by varying frequency from \qty{1}{\hertz} to \qty{1}{\mega\hertz} and measuring the amplitude and phase of the output $V_{\mathrm{out}}$ relative to the input $V_{\mathrm{in}}$.
+
+
+The transmission function $A(\nu)$ was found by dividing the output amplitude by the input amplitude at each frequency. The input amplitude was measured peak-to-peak from the function generator at each frequency to account for changes due to the circuit and generator limitations. For each filter we plotted the data together with the theoretical curves. The amplitude is presented on a Bode plot with the decibel scale $20\log_{10} A(\nu)$ on the vertical axis and $\log \nu$ on the horizontal axis, as shown in Figures~\ref{fig:low_pass_bode_plot} and \ref{fig:high_pass_bode_plot}.
+
 
 \begin{figure}[H]
     \centering
@@ -95,7 +101,8 @@ We explored the frequency dependence of each filter's response to a sine wave in
     \label{fig:high_pass_bode_plot}
 \end{figure}
 
-We determined the transmission function $A(\nu)$ by dividing the output amplitude by the input amplitude at each frequency. The input amplitude was measured peak-to-peak from the function generator at each frequency to account for changes due to the circuit and generator limitations. For each filter we plotted the data together with the theoretical curves. The amplitude is presented on a Bode plot with the decibel scale $20\log_{10} A(\nu)$ on the vertical axis and $\log \nu$ on the horizontal axis, as shown in Figures~\ref{fig:low_pass_bode_plot} and \ref{fig:high_pass_bode_plot}.
+
+The phase difference $\phi(\nu)$ between output and input was measured using the cursor function on the oscilloscope to measure the time difference between the peaks of the input and output waveforms. A phase lag (output peak after the input peak) corresponds to a negative phase. The experimental phase is calculated with the formula $\phi_{\mathrm{exp}}=2\pi t/T=2\pi tf$. The theoretical phase curve is given by $\phi_{\mathrm{theoretical}}=\pm\arctan(2\pi f/\omega_c)$.
 
 \begin{figure}[H]
     \centering
@@ -104,7 +111,6 @@ We determined the transmission function $A(\nu)$ by dividing the output amplitud
     \label{fig:low_pass_phase_plot}
 \end{figure}
 
-The phase difference $\phi(\nu)$ between output and input was measured using the cursor function on the oscilloscope to measure the time difference between the peaks of the input and output waveforms. A phase lag (output peak after the input peak) corresponds to a negative phase. The experimental phase is calculated with the formula $\phi_{\mathrm{exp}}=2\pi t/T=2\pi tf$. The theoretical phase curve is given by $\phi_{\mathrm{theoretical}}=\pm\arctan(2\pi f/\omega_c)$.
 
 The experimental characteristic frequency $f_{c,\mathrm{exp}}$ is obtained by linear extrapolation in $\log f$ from the data point closest to the \qty{-3}{\decibel} point on the Bode plot or the \ang{45} point on the phase plot; the blue vertical line on each figure marks this extrapolated value. Slight discrepancies between $f_{c,\mathrm{exp}}$ and the theoretical $f_c$ are expected due to the sensitive nature of the log scale; despite that, the measured phase and amplitude data fit the theoretical curves well.
 

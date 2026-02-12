@@ -68,7 +68,6 @@ def plot_oscilloscope_data(
     plt.grid(True, alpha=0.3)
     output_dir.mkdir(exist_ok=True)
     plt.savefig(output_dir / f"{file_out}.png", dpi=150)
-    plt.show()
 
 
 def find_closest_index(series: pd.Series[float], target_value: float) -> int:
