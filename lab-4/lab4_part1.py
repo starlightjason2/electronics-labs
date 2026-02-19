@@ -46,8 +46,8 @@ plt.close()
 
 
 high_pass_df = load_oscilloscope_data("high_pass_square_wave_10kHz", paths.data_dir)
-high_pass_df["v_in"] = high_pass_df["v_in"] - high_pass_df["v_in"].min()
-high_pass_df["v_out"] = high_pass_df["v_out"] - high_pass_df["v_out"].min()
+# high_pass_df["v_in"] = high_pass_df["v_in"] - high_pass_df["v_in"].min()
+# high_pass_df["v_out"] = high_pass_df["v_out"] - high_pass_df["v_out"].min()
 
 fig, ax = plt.subplots(figsize=(10, 6))
 ax.plot(
@@ -55,8 +55,8 @@ ax.plot(
 )
 ax.plot(high_pass_df["t_out"], high_pass_df["v_out"], label="Voltage Out", color="blue")
 
-plot_tau_charging(ax, high_pass_df["t_out"], high_pass_df["v_out"], 1, 502)
-plot_tau_discharging(ax, high_pass_df["t_out"], high_pass_df["v_out"], 502, 999)
+plot_tau_discharging(ax, high_pass_df["t_out"], high_pass_df["v_out"], 1, 499)
+plot_tau_charging(ax, high_pass_df["t_out"], high_pass_df["v_out"], 501, 999)
 
 ax.set_xlabel(r"Time $t$ (μs)")
 ax.set_ylabel(r"Voltage Out $V_{\mathrm{Out}}$ (V)")

@@ -86,7 +86,8 @@ def calculate_charge_tau(
     Returns: (tau_time, tau_voltage, tau_voltage_calc)
     """
     end_volt = float(voltage_series.iloc[end_idx])
-    tau_volt_calc = np.round((1 - (1 / np.e)) * end_volt, 3)
+    start_volt = float(voltage_series.iloc[start_idx])
+    tau_volt_calc = start_volt + (end_volt - start_volt) * (1 - (1 / np.e))
     tau_idx = find_closest_index(voltage_series[start_idx:end_idx], tau_volt_calc)
     tau_time = float(time_series.iloc[tau_idx])
     tau_volt = float(voltage_series.iloc[tau_idx])
@@ -104,10 +105,12 @@ def calculate_discharge_tau(
     Returns: (tau_time, tau_voltage, tau_voltage_calc)
     """
     start_volt = float(voltage_series.iloc[start_idx])
-    tau_volt_calc = np.round((1 / np.e) * start_volt, 3)
+    end_volt = float(voltage_series.iloc[end_idx])
+    tau_volt_calc = end_volt + (1 / np.e) * (start_volt - end_volt)
     tau_idx = find_closest_index(voltage_series[start_idx:end_idx], tau_volt_calc)
     tau_time = float(time_series.iloc[tau_idx])
     tau_volt = float(voltage_series.iloc[tau_idx])
+
     return (tau_time, tau_volt, tau_volt_calc)
 
 
