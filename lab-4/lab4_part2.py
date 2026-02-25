@@ -4,7 +4,12 @@ import numpy as np
 import pandas as pd
 
 from utils.paths import get_paths
-from utils.utils import create_bode_plot, create_phase_plot
+from utils.utils import (
+    create_bode_plot,
+    create_phase_plot,
+    plot_characteristic_freq,
+    plot_characteristic_phase,
+)
 
 paths = get_paths(__file__)
 

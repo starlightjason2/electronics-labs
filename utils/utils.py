@@ -234,63 +234,9 @@ def _log_extrapolate_frequency(
     return 10**x_target
 
 
-def create_phase_plot(
-    df: pd.DataFrame,
-    omega_c: float,
-    filter_type: str,
-    output_dir: Path,
-    *,
-    dpi: int = 150,
-) -> None:
-    """Create phase plot (theory + experimental) and save. Uses lab4 standard: logspace(0,6),
-    phi = ±τ·f·dT (minus for low-pass, plus for high-pass), -45° line with find_closest_index.
-    """
-    output_dir.mkdir(exist_ok=True)
-    sign = -1 if filter_type == "low" else 1
-    df["phi"] = sign * math.tau * df["f"] * df["dT"]
-
-    plt.figure(figsize=(10, 6))
-    plt.xlabel("Frequency (Hz)")
-    plt.ylabel("$\\phi$ (degrees)")
-    plt.grid(True, which="both", alpha=0.3)
-
-    f_values = np.logspace(0, 6, num=100)
-    omega_values = math.tau * f_values
+def plot_characteristic_phase(df: pd.DataFrame, filter_type: str):
     critical_omega = math.pi / 4 if filter_type == "high" else -math.pi / 4
     critical_deg = float(np.degrees(critical_omega))
-
-    eq_text = ""
-    if filter_type == "high":
-        phase_theoretical = high_pass_phase_theoretical(omega_values, omega_c)
-        eq_text = r"$\phi(f) = \arctan\left(\dfrac{f_c}{f}\right)$"
-    else:  # low
-        phase_theoretical = low_pass_phase_theoretical(omega_values, omega_c)
-        eq_text = r"$\phi(f) = -\arctan\left(\dfrac{f}{f_c}\right)$"
-
-    plt.semilogx(
-        f_values,
-        np.degrees(phase_theoretical),
-        label=f"{filter_type.capitalize()} Pass Phase (Theoretical)",
-    )
-    plt.scatter(
-        df["f"],
-        np.degrees(df["phi"]),
-        marker=MarkerStyle("o"),
-        label="Phase (Experimental)",
-    )
-
-    eq_text += f"\n$\\omega_c = {omega_c:.2f}$ Hz"
-    eq_text += f"\n$f_{{c,theoretical}} = {(omega_c / math.tau):.2f}$ Hz"
-    plt.text(
-        0.05,
-        0.05,
-        eq_text,
-        transform=plt.gca().transAxes,
-        fontsize=12,
-        verticalalignment="bottom",
-        bbox=dict(boxstyle="round", facecolor="wheat"),
-    )
-
     phi_deg = pd.Series(np.degrees(df["phi"]))
     closest_idx = find_closest_index(phi_deg, critical_deg)
     f_c_exp = _log_extrapolate_frequency(df["f"], phi_deg, critical_deg, closest_idx)
@@ -307,8 +253,68 @@ def create_phase_plot(
         label=f"$f_{{c,experimental}}$ = {f_c_exp:.0f} Hz",
     )
 
+
+def create_phase_plot(
+    df: pd.DataFrame,
+    omega_c: float,
+    filter_type: str,
+    output_dir: Path,
+    find_characteristic=True,
+    find_fit=True,
+) -> None:
+    """Create phase plot (theory + experimental) and save. Uses lab4 standard: logspace(0,6),
+    phi = ±τ·f·dT (minus for low-pass, plus for high-pass), -45° line with find_closest_index.
+    """
+    output_dir.mkdir(exist_ok=True)
+    sign = -1 if filter_type == "low" else 1
+    df["phi"] = sign * math.tau * df["f"] * df["dT"]
+
+    plt.figure(figsize=(10, 6))
+    plt.xlabel("Frequency (Hz)")
+    plt.ylabel("$\\phi$ (degrees)")
+    plt.grid(True, which="both", alpha=0.3)
+
+    f_values = np.logspace(0, 6, num=100)
+    omega_values = math.tau * f_values
+
+    plt.scatter(
+        df["f"],
+        np.degrees(df["phi"]),
+        marker=MarkerStyle("o"),
+        label="Phase (Experimental)",
+    )
+
+    if find_fit:
+        eq_text = ""
+        if filter_type == "high":
+            phase_theoretical = high_pass_phase_theoretical(omega_values, omega_c)
+            eq_text = r"$\phi(f) = \arctan\left(\dfrac{f_c}{f}\right)$"
+        else:  # low
+            phase_theoretical = low_pass_phase_theoretical(omega_values, omega_c)
+            eq_text = r"$\phi(f) = -\arctan\left(\dfrac{f}{f_c}\right)$"
+
+        plt.semilogx(
+            f_values,
+            np.degrees(phase_theoretical),
+            label=f"{filter_type.capitalize()} Pass Phase (Theoretical)",
+        )
+        eq_text += f"\n$\\omega_c = {omega_c:.2f}$ Hz"
+        eq_text += f"\n$f_{{c,theoretical}} = {(omega_c / math.tau):.2f}$ Hz"
+        plt.text(
+            0.05,
+            0.05,
+            eq_text,
+            transform=plt.gca().transAxes,
+            fontsize=12,
+            verticalalignment="bottom",
+            bbox=dict(boxstyle="round", facecolor="wheat"),
+        )
+
+    if find_characteristic:
+        plot_characteristic_phase(df, filter_type)
+
     plt.legend()
-    plt.savefig(output_dir / f"{filter_type.lower()}_pass_phase_plot.png", dpi=dpi)
+    plt.savefig(output_dir / f"{filter_type.lower()}_pass_phase_plot.png")
     plt.close()
 
 
@@ -317,8 +323,8 @@ def create_bode_plot(
     omega_c: float,
     filter_type: str,
     output_dir: Path,
-    *,
-    dpi: int = 150,
+    find_characteristic=True,
+    find_fit=True,
 ) -> None:
     """Create Bode (gain) plot (theory + experimental) and save. Uses lab4 standard: logspace(0,6),
     -3 dB line with find_closest_index and axvline, equation at bottom with ω_c in Hz.
@@ -330,6 +336,42 @@ def create_bode_plot(
     plt.ylabel("Gain (dB)")
     plt.grid(True, which="both", alpha=0.3)
 
+    f_values = np.logspace(0, 6, num=100)
+    omega_values = math.tau * f_values
+
+    plt.scatter(df["f"], df["db"], marker=MarkerStyle("o"), label="Gain (Experimental)")
+
+    if find_fit:
+        if filter_type == "high":
+            gain_theoretical = high_pass_gain_theoretical(omega_values, omega_c)
+            eq_text = r"$A(f) = 20\log_{10}\left(\dfrac{2\pi\,f/\omega_c}{\sqrt{1+(2\pi\,f/\omega_c)^2}}\right)$"
+        else:
+            gain_theoretical = low_pass_gain_theoretical(omega_values, omega_c)
+            eq_text = r"$A(f) = 20\log_{10}\left(\dfrac{1}{\sqrt{1+(2\pi\,f/\omega_c)^2}}\right)$"
+
+        plt.semilogx(f_values, gain_theoretical, label="Gain (Theoretical)")
+
+        eq_text += f"\n$\\omega_{{c,theoretical}} = {omega_c:.2f}$ Hz"
+        eq_text += f"\n$f_{{c,theoretical}} = {(omega_c / math.tau):.2f}$ Hz"
+        plt.text(
+            0.05,
+            0.05,
+            eq_text,
+            transform=plt.gca().transAxes,
+            fontsize=12,
+            verticalalignment="bottom",
+            bbox=dict(boxstyle="round", facecolor="wheat"),
+        )
+
+    if find_characteristic:
+        plot_characteristic_freq(df)
+
+    plt.legend()
+    plt.savefig(output_dir / f"{filter_type}_pass_bode_plot.png")
+    plt.close()
+
+
+def plot_characteristic_freq(df: pd.DataFrame):
     critical_db = -3
     closest_idx = find_closest_index(df["db"], critical_db)
     f_c_exp = _log_extrapolate_frequency(df["f"], df["db"], critical_db, closest_idx)
@@ -345,34 +387,3 @@ def create_bode_plot(
         linestyle="--",
         label=f"$f_{{c,experimental}}$ = {f_c_exp:.0f} Hz",
     )
-
-    f_values = np.logspace(0, 6, num=100)
-    omega_values = math.tau * f_values
-
-    if filter_type == "high":
-        gain_theoretical = high_pass_gain_theoretical(omega_values, omega_c)
-        eq_text = r"$A(f) = 20\log_{10}\left(\dfrac{2\pi\,f/\omega_c}{\sqrt{1+(2\pi\,f/\omega_c)^2}}\right)$"
-    else:
-        gain_theoretical = low_pass_gain_theoretical(omega_values, omega_c)
-        eq_text = (
-            r"$A(f) = 20\log_{10}\left(\dfrac{1}{\sqrt{1+(2\pi\,f/\omega_c)^2}}\right)$"
-        )
-
-    plt.semilogx(f_values, gain_theoretical, label="Gain (Theoretical)")
-    plt.scatter(df["f"], df["db"], marker=MarkerStyle("o"), label="Gain (Experimental)")
-
-    eq_text += f"\n$\\omega_{{c,theoretical}} = {omega_c:.2f}$ Hz"
-    eq_text += f"\n$f_{{c,theoretical}} = {(omega_c / math.tau):.2f}$ Hz"
-    plt.text(
-        0.05,
-        0.05,
-        eq_text,
-        transform=plt.gca().transAxes,
-        fontsize=12,
-        verticalalignment="bottom",
-        bbox=dict(boxstyle="round", facecolor="wheat"),
-    )
-
-    plt.legend()
-    plt.savefig(output_dir / f"{filter_type}_pass_bode_plot.png", dpi=dpi)
-    plt.close()
