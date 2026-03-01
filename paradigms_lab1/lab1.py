@@ -18,6 +18,11 @@ paths.output_dir.mkdir(exist_ok=True)
 df = pd.read_csv(paths.data_dir / "paradigms_lab1.csv").sort_values(by="f")
 
 
+R = 51
+C = 0.018e-6
+L = 22e-3
+
+
 # unit scaling
 df["omega"] = 2 * math.pi * df["f"]
 df["v_out"] = df["v_out"] / 1000
@@ -38,10 +43,6 @@ def theoretical():
 
     return (x_values, phi_values, admittance_values)
 
-
-R = 51
-C = 0.018e-6
-L = 22e-3
 
 omega_0 = 1 / np.sqrt(L * C)
 beta = R / (2 * L)
@@ -74,7 +75,7 @@ def phase_plot(df):
 
 
 def admittance_plot(df):
-    df["A"] = df["v_out"] / df["v_in"]
+    df["A"] = (df["v_out"] / df["v_in"]) / R
 
     fig, ax = plt.subplots()
 

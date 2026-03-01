@@ -1,0 +1,82 @@
+\documentclass[11pt]{article}
+\usepackage[margin=0.75in]{geometry}
+\usepackage{graphicx}
+\usepackage{siunitx}
+\usepackage{amsmath}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{circuitikz}
+
+
+\title{Lab 3: Inductors and Time-Dependent Signals}
+\author{Jason Jain \\
+        Oregon State University, Department of Physics \\
+        Electronics Laboratory}
+\date{\today}
+
+\graphicspath{{output/}}
+
+\begin{document}
+
+\maketitle
+
+
+\begin{abstract}
+% Place the abstract content here. 
+% It is a brief summary of the paper's purpose, methods, findings, and conclusions.
+This is the text of the abstract. It provides a concise summary of the research presented in the document.
+\end{abstract}
+
+
+\begin{figure}[H]
+    \centering
+    
+  \begin{circuitikz}
+  \draw (0,0)
+    % Sinusoidal Voltage Source with label and voltage polarity
+    to[V, v=$V_{in}$] (0,3) 
+    % Resistor with resistance value and voltage drop label
+    to[R, l=\SI{10}{\ohm}, v=$v_R$] (3,3)
+    % Inductor with inductance value and current arrow
+    to[L, l=\SI{1}{\henry}, v=$v_L$] (6,3)
+    % Capacitor with capacitance value
+    to[C, l=\SI{10}{\micro\farad}, v=$v_C$] (6,0)
+    % Closing the loop to ground
+    to[short, -*] (0,0) node[ground]{};
+\end{circuitikz}
+\end{figure}
+
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{amplitude_plot.png}
+    \caption{Measurement of admittance $A$.}
+\end{figure}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{phase_plot.png}
+    \caption{Measurement of phase $\phi$}
+\end{figure}
+
+
+
+
+\begin{center}
+\begin{tabular}{|c|c||c|}
+\hline
+\textbf{A} & \textbf{B} & \textbf{Q} \\
+\hline
+0 & 0 & 0 \\
+0 & 1 & 0 \\
+1 & 0 & 0 \\
+1 & 1 & 1 \\
+\hline
+\end{tabular}
+\end{center}
+
+
+
+\end{document}
