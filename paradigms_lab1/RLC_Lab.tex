@@ -10,7 +10,7 @@
 
 
 \title{Exploring Response of Series RLC circuits }
-\author{Jason Jain \\
+\author{Jason Jain, Colby Hutchinson \\
         Oregon State University, Department of Physics \\
         Electronics Laboratory}
 \date{\today}
@@ -24,11 +24,11 @@
 \begin{abstract}
 % Place the abstract content here. 
 % It is a brief summary of the paper's purpose, methods, findings, and conclusions.
-An RLC circuit consists of an inductor, capacitor, and resistor in series. We explore the response of such an RLC circuit, measuring admittance and phase across a range of driving frequencies, and observing the band pass behavior near resonant frequency. We compare the results of our measurements with theoretical calculations.
+An RLC circuit consists of an inductor, capacitor, and resistor in series. We explore the response of such an RLC circuit, measuring admittance and phase across a range of driving frequencies with an oscilloscope. We discuss the band pass behavior near resonant frequency and compare our measurement results to theoretical calculations.
 \end{abstract}
 
 \section{Introduction}\label{sec:introduction}
-In this lab, we explore the admittance and phase of a series RLC circuit with inductance $L=\qty{22}{\milli\henry}$, resistance $R=\qty{50}{\ohm}$, capacitance $C=\qty{18}{\nano\farad}$, and external voltage $V_0 \approx \qty{3}{\volt}$. The values of $R$, $L$, and $C$ completely determine the physical characteristics of the circuit. RLC circuits are some of the most elementary oscillator circuits and have applications across basic electronics. The circuit (Figure~\ref{fig:circuit}) reaches maximum current response at its resonant frequency $\omega_0$, and quickly drops to $1 / \sqrt{2}$ within $\omega_0\pm\beta$, while power drops to $P \propto I^2=1/2$. This "band-pass" behavior is very useful for devices that need to filter particular frequency ranges, like radios. By adjusting $L$, $R$, and $C$, engineers can have full control over the band pass range. This powerful flexibility motivates our exploration of this circuit.
+In this lab, we explore the admittance and phase of a series RLC circuit with inductance $L=\qty{22}{\milli\henry}$, resistance $R=\qty{50}{\ohm}$, capacitance $C=\qty{18}{\nano\farad}$, and external voltage $V_0 \approx \qty{3}{\volt}$. The values of $R$, $L$, and $C$ completely determine the physical characteristics of the circuit. RLC circuits are some of the most elementary oscillator circuits and have applications across basic electronics. The circuit (Figure~\ref{fig:circuit}) reaches maximum current response at its resonant frequency $\omega_0$, and quickly drops to $1 / \sqrt{2}$ within $\omega_0\pm\beta$, while power response drops to $P \propto I^2=1/2$. This band-pass behavior is very useful for devices that need to filter particular frequency ranges, like radios. By adjusting $L$, $R$, and $C$, engineers can have full control over the band pass range. This powerful flexibility motivates our exploration of this circuit.
 
 
 \begin{figure}[H]
@@ -39,11 +39,11 @@ In this lab, we explore the admittance and phase of a series RLC circuit with in
     % Sinusoidal Voltage Source with label and voltage polarity
     to[V, v=$V_{E}$] (0, 3)
     % Resistor with resistance value and voltage drop label
-    to[R, l=\SI{10}{\ohm}, v=$v_R$] (3, 3)
+    to[R, l=\SI{50}{\ohm}, v=$v_R$] (3, 3)
     % Inductor with inductance value and current arrow
-    to[L, l=\SI{1}{\henry}, v=$v_L$] (6, 3)
+    to[L, l=\SI{22}{\milli\henry}, v=$v_L$] (6, 3)
     % Capacitor with capacitance value
-    to[C, l=\SI{10}{\micro\farad}, v=$v_C$] (6, 0)
+    to[C, l=\SI{18}{\nano\farad}, v=$v_C$] (6, 0)
     % Closing the loop to ground
     to[short, -*] (0, 0) node[ground]{};
 \end{circuitikz}
@@ -93,7 +93,16 @@ I(t)=\frac{\omega\,V_{0}  / L}{\sqrt{(\omega_{0}^{2}-\omega ^{2})^{2}+4\beta^{2}
 
 \section{Methods}\label{sec:methods}
 
-Before discussing our figures, please note that component and oscilloscope tolerances introduce measurement uncertainty. The voltage reading from our oscilloscope, particularly of voltage in $V_E$, were often flickering by $\pm5\%$ during measurement. The noted values of $R$, $L$, and $C$ are also subject to uncertainty. 
+We assembled Circuit \ref{fig:circuit} and sent a driving sinusoidal voltage $V_E$ from a function generator. We used an oscilloscope to measure the voltage $V_R$ across the resistor. Before discussing our figures, please note that component and oscilloscope tolerances introduce measurement uncertainty. The voltage reading from our oscilloscope, particularly of voltage in $V_E$, were often flickering by $\pm5\%$ during measurement. The noted values of $R$, $L$, and $C$ are also subject to uncertainty. 
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{oscilloscope_traces.png}
+    \caption{Here we see some oscilloscope traces at interesting values. Starting from top-left, we see a phase shift of $\phi_I\mp\pi/4$ within the band pass ($\omega\pm\beta$), where amplitudes drop to $1/\sqrt{2}$.  In the top center at resonance ($\omega=\omega_0$), we see a phase shift of $\phi_I=0$ and equal amplitudes -- this is where the maximum response is achieved. In the bottom row, we see phase shift approach $\mp\pi/2$ as driving frequency $\omega$ approaches $\pm\infty$, while the amplitude approaches $0$.}
+    \label{fig:traces}
+\end{figure}
+
 
 \subsection{Measuring Admittance}
 
@@ -111,15 +120,14 @@ Before discussing our figures, please note that component and oscilloscope toler
 \end{equation}
 
 
- On our oscilloscope, we used the oscilloscope's built in measurement tool to find $V_{R}$ and $V_{E}$. The value of $R=\qty{50}{\ohm}$ was already known. Figure~\ref{fig:admittance} shows the measured and theoretical admittance in Eqs. \eqref{y_exp}; raw data is tabulated in the appendix (Table~\ref{tab:data}). 
-
+ On our oscilloscope, we used the built in measurement tool to find $V_{R}$ and $V_{E}$. The value of $R=\qty{50}{\ohm}$ was already known. Figure~\ref{fig:admittance} shows the measured and theoretical admittance in Eqs. \eqref{y_exp}; raw data is tabulated in the appendix (Table~\ref{tab:data}).
 
 
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.85\textwidth]{amplitude_plot.png}
-    \caption{Admittance $|Y|$ vs.\ driving frequency $\omega$: experimental points and theoretical curve. We see a close fit to our theoretical curve in Eqs. \eqref{y_exp}, with discrepencies expected from component tolerances. Experiments used peak-to-peak voltage from an oscilloscope; as such, the measured voltage was scaled by $1/2$ to find amplitude. The red line marks resonant frequency $\omega_0$ where we see maximum response; the band pass lines $\omega_0\pm\beta$ intersect the curve at $|Y| = |Y|_\mathrm{max} / \sqrt{2}$, illustrating the narrow range of this circuit. Outside the band pass, power response would drop by $1/2$. }
+    \caption{Admittance $|Y|$ vs.\ driving frequency $\omega$: experimental points and theoretical curve.  Each sub-tick is $1\beta$ with the graph centered at $\omega_0$. We see a reasonable fit to our theoretical curve in Eqs. \eqref{y_exp}, with discrepencies expected from component tolerances. Experiments used peak-to-peak voltage from an oscilloscope; as such, the measured voltage was scaled by $1/2$ to find amplitude. The red line marks resonant frequency $\omega_0$ where we see maximum response; the band pass lines $\omega_0\pm\beta$ intersect the curve at $|Y| = |Y|_\mathrm{max} / \sqrt{2}$, illustrating the narrow range of this circuit. Outside the band pass, power response would drop by $1/2$. }
     \label{fig:admittance}
 \end{figure}
 
@@ -138,24 +146,22 @@ We used the cursor functionality on the oscilloscope to measure the change in ti
   \end{aligned}
 \end{equation}
 
-Within the band pass, we expect $\phi_I(\omega_0\pm\beta)=\tan^{-1} \left[{\frac{-2\beta(\omega_0\pm\beta)}{\omega_0^2 - (\omega_0\pm\beta)^2}}\right]  + \frac{\pi}{2}\approx\tan^{-1} \left[{\frac{-2\beta\omega_0}{2\omega_0\beta}}\right]  + \frac{\pi}{2}=\pi/4$. Likewise, at the resonant frequency, we should see $\phi_I(\omega_0)=0$. Figure~\ref{fig:phase} shows the measured and theoretical phase closely matching, with expected behavior around the band pass. See appendix (Table~\ref{tab:data}) for data. 
+Within the band pass, we expect $\phi_I(\omega_0\pm\beta)=\tan^{-1} \left[{\frac{-2\beta(\omega_0\pm\beta)}{\omega_0^2 - (\omega_0\pm\beta)^2}}\right]  + \frac{\pi}{2}\approx\tan^{-1} \left[{\frac{-2\beta\omega_0}{2\omega_0\beta}}\right]  + \frac{\pi}{2}=\pi/4$. Similarly, at the resonant frequency, we should see $\phi_I(\omega_0)=0$. Figure~\ref{fig:phase} shows the measured and theoretical phase closely matching, with expected behavior around the band pass. See the Appendix (Table~\ref{tab:data}) for data. 
 
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.85\textwidth]{phase_plot.png}
-       \caption{Admittance $|Y|$ vs.\ driving frequency $\omega$: experimental points and theoretical curve. We see a close fit to our theoretical curve in Eqs. \eqref{phi_exp}, with discrepencies expected from component tolerances. The red line marks resonant frequency $\omega_0$ where we see a phase shift of $0$; the band pass lines $\omega_0\pm\beta$ intersect the curve at $\phi_I = \pm\pi / 4$. Outside the band pass, phase shift slowly approaches asymptotes of $\pm\pi/2$.}
+       \caption{Phase $\phi_I$ vs.\ driving frequency $\omega$: experimental points and theoretical curve. Each sub-tick is $1\beta$ with the graph centered at $\omega_0$. We see a close fit to our theoretical curve in Eqs. \eqref{phi_exp}, with discrepancies expected from component tolerances. The red line marks resonant frequency $\omega_0$ where we see a phase shift of $0$; the band pass lines $\omega_0\pm\beta$ intersect the curve at $\phi_I = \pm\pi / 4$. Outside the band pass, phase shift slowly approaches asymptotes of $\pm\pi/2$.}
     \label{fig:phase}
 \end{figure}
 
-
+\newpage
 
 
 \section{Conclusions}\label{sec:conclusions}
 
-We 
-
-\newpage
+We set up a series RLC circuit and powered it with a variable sinusoidal driving voltage through a function generator. We used an oscilloscope to measure external input voltage and output resistor voltage, using that along with time shift data to calculate experimental phase and admittance. After comparing these measurements to known theoretical equations for admittance and phase, we found a reasonable fit for both. We took note of interesting behavior at the resonant frequency $\omega=\omega_0$, where output voltage matches input voltage in both phase and amplitude, and explored how amplitude fall off within the band pass of $\omega=\omega_0\pm\beta$. Since our experimental data matches our theoretical predictions, we consider this a successful experiment. 
 
 \appendix
 \section{Data Table}

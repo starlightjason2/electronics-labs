@@ -107,7 +107,6 @@ def admittance_plot(df: pd.DataFrame) -> None:
         label="Admittance (Experimental)",
         zorder=10,
     )
-    ax.legend()
     fig.savefig(paths.output_dir / "amplitude_plot.png", dpi=1200)
 
 
@@ -131,6 +130,7 @@ def oscilloscope_traces_plot(
     phase_ref = 1.5 * math.pi  # V_E peak in first period
 
     for idx, omega in enumerate(omegas):
+        beta_diff_factor = np.abs((omega_0 - omega) / beta)
         ax = axes[idx]
         admittance, phi = admittance_at_omega(omega), phase_at_omega(omega)
         v_in = v_in_ref * np.cos(theta)
@@ -164,10 +164,15 @@ def oscilloscope_traces_plot(
         ax.set_xticks(ticks)
         ax.set_xticklabels(tick_labels)
         ax.set_ylabel("Voltage (V)")
+
+        if beta_diff_factor == 1:
+            ax.axhline(y=np.sqrt(2), color="C2", label="$V=\\pm1/\\sqrt{2}$")
+            ax.axhline(y=-np.sqrt(2), color="C2")
+
         sign = (
             ""
             if omega == omega_0
-            else f" {('+' if omega > omega_0 else '-')}{np.abs((omega_0 - omega) / beta):.0f} \\beta"
+            else f" {('+' if omega > omega_0 else '-')}{beta_diff_factor:.0f} \\beta"
         )
         ax.set_title(
             f"$\\omega = \\omega_0{sign} = {(omega/1000):.1f}\\cdot 10^3$ rad/s"
