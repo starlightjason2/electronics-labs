@@ -5,10 +5,11 @@
 \usepackage{amsmath}
 \usepackage{float}
 \usepackage{caption}
+\usepackage{booktabs}
 \usepackage{circuitikz}
 
 
-\title{Lab 3: Inductors and Time-Dependent Signals}
+\title{Exploring Response of Series RLC circuits }
 \author{Jason Jain \\
         Oregon State University, Department of Physics \\
         Electronics Laboratory}
@@ -20,63 +21,182 @@
 
 \maketitle
 
-
 \begin{abstract}
 % Place the abstract content here. 
 % It is a brief summary of the paper's purpose, methods, findings, and conclusions.
-This is the text of the abstract. It provides a concise summary of the research presented in the document.
+An RLC circuit consists of an inductor, capacitor, and resistor in series. We explore the response of such an RLC circuit, measuring admittance and phase across a range of driving frequencies, and observing the band pass behavior near resonant frequency. We compare the results of our measurements with theoretical calculations.
 \end{abstract}
+
+\section{Introduction}\label{sec:introduction}
+In this lab, we explore the admittance and phase of a series RLC circuit with inductance $L=\qty{22}{\milli\henry}$, resistance $R=\qty{50}{\ohm}$, capacitance $C=\qty{18}{\nano\farad}$, and external voltage $V_0 \approx \qty{3}{\volt}$. The values of $R$, $L$, and $C$ completely determine the physical characteristics of the circuit. RLC circuits are some of the most elementary oscillator circuits and have applications across basic electronics. The circuit (Figure~\ref{fig:circuit}) reaches maximum current response at its resonant frequency $\omega_0$, and quickly drops to $1 / \sqrt{2}$ within $\omega_0\pm\beta$, while power drops to $P \propto I^2=1/2$. This "band-pass" behavior is very useful for devices that need to filter particular frequency ranges, like radios. By adjusting $L$, $R$, and $C$, engineers can have full control over the band pass range. This powerful flexibility motivates our exploration of this circuit.
 
 
 \begin{figure}[H]
     \centering
     
   \begin{circuitikz}
-  \draw (0,0)
+  \draw (0, 0)
     % Sinusoidal Voltage Source with label and voltage polarity
-    to[V, v=$V_{in}$] (0,3) 
+    to[V, v=$V_{E}$] (0, 3)
     % Resistor with resistance value and voltage drop label
-    to[R, l=\SI{10}{\ohm}, v=$v_R$] (3,3)
+    to[R, l=\SI{10}{\ohm}, v=$v_R$] (3, 3)
     % Inductor with inductance value and current arrow
-    to[L, l=\SI{1}{\henry}, v=$v_L$] (6,3)
+    to[L, l=\SI{1}{\henry}, v=$v_L$] (6, 3)
     % Capacitor with capacitance value
-    to[C, l=\SI{10}{\micro\farad}, v=$v_C$] (6,0)
+    to[C, l=\SI{10}{\micro\farad}, v=$v_C$] (6, 0)
     % Closing the loop to ground
-    to[short, -*] (0,0) node[ground]{};
+    to[short, -*] (0, 0) node[ground]{};
 \end{circuitikz}
+\caption{The circuit we analyze in this lab consists of resistor $R$, inductor $L$, and capacitor $C$ in series with external voltage $V_E$.}
+\label{fig:circuit}
 \end{figure}
+
+We can model the sinusoidal nature of the applied AC voltage with a complex phasor voltage $V_E=V_{0}\,e^{i\omega t}$. By Kirchoff's Laws, the circuit will obey the following ODE.
+
+$$\ddot{q}+\frac{L}{R}\,\dot{q}+\frac{1}{LC}\,q=\frac{V_{0}}{L}\,e^{i\omega t}$$
+
+Or, expressed in standard driven harmonic oscillator form with damping factor $\beta=\frac{R}{2L}=\qty{1.1}{\kilo\hertz}$ and resonant frequency $\omega_{0}=(LC)^{-1/2}=\qty{50}{\kilo\hertz}$,
+
+$$\ddot{q}+2\beta \,\dot{q}+\omega_{0}^{2}\,q=0$$
+
+\subsection{Modeling Transient Behavior}
+
+The characteristic equation $r^{2}+2\beta\,r+\omega_{0}^{2}=0$ has solutions found with the quadratic formula: $r_{1,2}=\frac{1}{2}(-2\beta\pm \sqrt{4\beta^{2}-4\omega_{0}^{2}})=-\beta\pm \sqrt{\beta^{2}-\omega_{0}^{2}}$. Since $\beta^{2}<\omega_{0}^{2}$, we know $r_{1,2}=-\beta\pm i\sqrt{\omega_{0}^{2}-\beta^{2}}$. This is an underdamped harmonic oscillator with a known transient solution, 
+
+$$
+x(t) = e^{-\beta t}(c_{1}\,e^{i\omega_{1}t}+c_{2}\,e^{-i\omega_{1}t})=A\,e^{-\beta t}\cos(\omega_1 t + \phi)$$
+
+How long does it take for this solution to decay? Consider the damping time $t_D$ during which the circuit will decay to $1/e$ of the starting value. Referring to Eq.~\eqref{amp_phase}, we set $\beta\,t_D=1$ so $t_D=1/\beta=\qty{0.89}{\milli\s}$, during which we should see $\omega_1 / (2\pi\beta)=7$ cycles. Due to the miniscule nature of these values, the transient solution is of no use to us during this experiment. The transient solutions decay almost immediately after turning the circuit on. 
+
+
+\subsection{Modeling Steady State Behavior}
+
+
+The known steady state solution to the ODE is $q_p(t)=De^{i\omega t}$ where $D=|q|\,e^{i\phi}$, where
+
+
+\begin{equation}
+  \label{amp_phase}
+|q| = \frac{1}{\sqrt{(\omega_0^2-\omega^2)^2+4\beta^2\omega^2}}, \quad \tan\phi = \frac{-2\beta\omega}{\omega_0^2 - \omega^2}
+\end{equation}
+
+
+Differentiate $q(t)$ with respect to time to find the current $I(t)=i\omega\left\lvert{q}\right\rvert\,e^{i\phi}\,e^{i\omega t}=\omega\left\lvert{q}\right\rvert\,e^{i(\phi+\pi/2)}\,e^{i\omega t}$.
+
+
+
+
+\begin{equation}
+  \label{curr_phase}
+I(t)=\frac{\omega\,V_{0}  / L}{\sqrt{(\omega_{0}^{2}-\omega ^{2})^{2}+4\beta^{2}\omega ^{2}}}\,e^{i\phi_{I}}\,e^{i\omega t}, \quad \phi_I=\phi + \pi / 2
+\end{equation}
+
+\section{Methods}\label{sec:methods}
+
+Before discussing our figures, please note that component and oscilloscope tolerances introduce measurement uncertainty. The voltage reading from our oscilloscope, particularly of voltage in $V_E$, were often flickering by $\pm5\%$ during measurement. The noted values of $R$, $L$, and $C$ are also subject to uncertainty. 
+
+\subsection{Measuring Admittance}
+
+
+ Admittance is a common way to characterize how easily AC current flows in a circuit, and is easy to measure experimentally and calculate theoretically. Substitute external voltage $V_{E}=V_{0}\,e^{i\omega t}$ in Eq. \eqref{amp_phase}. By Ohm's Law, $V_{E}=I(t) /Y$ and $V_{R}=I(t)$, where $Y$ is the admittance. Solving for $Y$ and taking the norm, we get two equations for theoretical and experimental admittance respectively. 
+ 
+
+
+\begin{equation}
+  \label{y_exp}
+  \begin{aligned}
+    |Y|_{\text{theoretical}}(\omega)&=\frac{\omega  / L}{\sqrt{(\omega_{0}^{2}-\omega ^{2})^{2}+4\beta^{2}\omega ^{2}}}  \\
+    |Y|_{\text{experimental}}(\omega)&=\frac{V_{R}}{V_{E}}\frac{1}{R},
+  \end{aligned}
+\end{equation}
+
+
+ On our oscilloscope, we used the oscilloscope's built in measurement tool to find $V_{R}$ and $V_{E}$. The value of $R=\qty{50}{\ohm}$ was already known. Figure~\ref{fig:admittance} shows the measured and theoretical admittance in Eqs. \eqref{y_exp}; raw data is tabulated in the appendix (Table~\ref{tab:data}). 
+
 
 
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.85\textwidth]{amplitude_plot.png}
-    \caption{Measurement of admittance $A$.}
+    \caption{Admittance $|Y|$ vs.\ driving frequency $\omega$: experimental points and theoretical curve. We see a close fit to our theoretical curve in Eqs. \eqref{y_exp}, with discrepencies expected from component tolerances. Experiments used peak-to-peak voltage from an oscilloscope; as such, the measured voltage was scaled by $1/2$ to find amplitude. The red line marks resonant frequency $\omega_0$ where we see maximum response; the band pass lines $\omega_0\pm\beta$ intersect the curve at $|Y| = |Y|_\mathrm{max} / \sqrt{2}$, illustrating the narrow range of this circuit. Outside the band pass, power response would drop by $1/2$. }
+    \label{fig:admittance}
 \end{figure}
+
+
+
+\subsection{Measuring Phase}
+
+We used the cursor functionality on the oscilloscope to measure the change in time $\Delta t$ between the t-intercepts of each input and output. The experimental phase shift $\phi_{I,\text{exp}}$ is then given by $2\pi f\Delta t$. The theoretical phase shift $\phi_{I,\text{th}}$ is given Eq.~\eqref{amp_phase} and Eq.~\eqref{curr_phase}. 
+
+
+\begin{equation}
+  \label{phi_exp}
+  \begin{aligned}
+  \phi_{I,\text{th}}(\omega) &= \tan^{-1} \left[{\frac{-2\beta\omega}{\omega_0^2 - \omega^2}}\right] + \frac{\pi}{2} \\
+  \phi_{I,\text{exp}}(\omega) &= 2\pi f\Delta t
+  \end{aligned}
+\end{equation}
+
+Within the band pass, we expect $\phi_I(\omega_0\pm\beta)=\tan^{-1} \left[{\frac{-2\beta(\omega_0\pm\beta)}{\omega_0^2 - (\omega_0\pm\beta)^2}}\right]  + \frac{\pi}{2}\approx\tan^{-1} \left[{\frac{-2\beta\omega_0}{2\omega_0\beta}}\right]  + \frac{\pi}{2}=\pi/4$. Likewise, at the resonant frequency, we should see $\phi_I(\omega_0)=0$. Figure~\ref{fig:phase} shows the measured and theoretical phase closely matching, with expected behavior around the band pass. See appendix (Table~\ref{tab:data}) for data. 
 
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.85\textwidth]{phase_plot.png}
-    \caption{Measurement of phase $\phi$}
+       \caption{Admittance $|Y|$ vs.\ driving frequency $\omega$: experimental points and theoretical curve. We see a close fit to our theoretical curve in Eqs. \eqref{phi_exp}, with discrepencies expected from component tolerances. The red line marks resonant frequency $\omega_0$ where we see a phase shift of $0$; the band pass lines $\omega_0\pm\beta$ intersect the curve at $\phi_I = \pm\pi / 4$. Outside the band pass, phase shift slowly approaches asymptotes of $\pm\pi/2$.}
+    \label{fig:phase}
 \end{figure}
 
 
 
 
-\begin{center}
-\begin{tabular}{|c|c||c|}
-\hline
-\textbf{A} & \textbf{B} & \textbf{Q} \\
-\hline
-0 & 0 & 0 \\
-0 & 1 & 0 \\
-1 & 0 & 0 \\
-1 & 1 & 1 \\
-\hline
+\section{Conclusions}\label{sec:conclusions}
+
+We 
+
+\newpage
+
+\appendix
+\section{Data Table}
+\begin{table}[htbp]
+\centering
+\caption{Series RLC frequency response: external and resistor voltages, time shift, phase shift, and amplitude ratio (admittance). The figures are presented in angular frequency domain, which involves scaling frequency by $2\pi$.}
+\label{tab:data}
+\small
+\begin{tabular}{
+  S[table-format=2.2]
+  S[table-format=3.2]
+  S[table-format=1.2]
+  S[table-format=-2.2]
+  S[table-format=-1.2]
+  S[table-format=1.2]
+}
+\toprule
+{Frequency (\unit{kHz})} & {$V_R$ (\unit{mV})} & {$V_{E}$ (\unit{V})} & {Time shift (\unit{\micro\second})} & {Phase shift (\unit{rad})} & {Admittance} \\
+\midrule
+ 2.00 &  28.00 & 2.12 &  124.00 &  1.56 & 0.01 \\
+ 4.00 &  68.00 & 2.12 &   60.00 &  1.51 & 0.03 \\
+ 5.00 &  98.00 & 2.12 &   48.00 &  1.51 & 0.05 \\
+ 6.00 & 152.00 & 2.10 &   38.00 &  1.43 & 0.07 \\
+ 7.00 & 284.00 & 2.04 &   30.00 &  1.32 & 0.14 \\
+ 7.50 & 448.00 & 1.90 &   23.00 &  1.08 & 0.24 \\
+ 7.80 & 576.00 & 1.68 &   17.00 &  0.83 & 0.34 \\
+ 8.00 & 660.00 & 1.60 &   12.00 &  0.60 & 0.42 \\
+ 8.10 & 680.00 & 1.50 &    6.00 &  0.31 & 0.46 \\
+ 8.20 & 696.00 & 1.40 &    0.00 &  0.00 & 0.48 \\
+ 8.30 & 688.00 & 1.50 &   -3.00 & -0.16 & 0.46 \\
+ 8.50 & 616.00 & 1.60 &  -10.00 & -0.53 & 0.38 \\
+ 8.70 & 544.00 & 1.80 &  -15.00 & -0.82 & 0.31 \\
+ 9.00 & 440.00 & 1.90 &  -18.00 & -1.02 & 0.23 \\
+ 9.50 & 320.00 & 2.00 &  -20.00 & -1.19 & 0.16 \\
+10.00 & 256.00 & 2.10 &  -21.00 & -1.32 & 0.12 \\
+11.00 & 172.00 & 2.10 &  -21.00 & -1.45 & 0.08 \\
+13.00 & 116.00 & 2.10 &  -19.00 & -1.55 & 0.05 \\
+18.00 &  60.00 & 2.10 & -13.20 & -1.49 & 0.03 \\
+25.00 &  40.00 & 2.10 &  -9.60 & -1.51 & 0.02 \\
+\bottomrule
 \end{tabular}
-\end{center}
-
-
+\end{table}
 
 \end{document}
