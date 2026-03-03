@@ -7,6 +7,7 @@
 \usepackage{caption}
 \usepackage{booktabs}
 \usepackage{circuitikz}
+\usepackage{url}
 
 
 \title{Exploring Response of Series RLC circuits }
@@ -22,13 +23,11 @@
 \maketitle
 
 \begin{abstract}
-% Place the abstract content here. 
-% It is a brief summary of the paper's purpose, methods, findings, and conclusions.
-An RLC circuit consists of an inductor, capacitor, and resistor in series. We explore the response of such an RLC circuit, measuring admittance and phase across a range of driving frequencies with an oscilloscope. We discuss the band pass behavior near resonant frequency and compare our measurement results to theoretical calculations.
+We explore the frequency response of a series RLC circuit by measuring admittance and phase shift across a range of driving frequencies. The circuit exhibits band-pass behavior, with maximum response at the resonant frequency $\omega_0$ and rapid attenuation outside the band pass region $\omega_0\pm\beta$. By adjusting $L$, $R$, and $C$, engineers can control the band pass range, making RLC circuits useful for frequency filtering in applications such as radio receivers. We use an oscilloscope to send a range of driving frequencies into the circuit, and make experimental measurements for admittance (fraction of voltage out to voltage in) and current phase (shifted from voltage in). Our measurements reasonably matched theoretical predictions, demonstrating the circuit's utility for frequency filtering applications, like radios.
 \end{abstract}
 
 \section{Introduction}\label{sec:introduction}
-In this lab, we explore the admittance and phase of a series RLC circuit with inductance $L=\qty{22}{\milli\henry}$, resistance $R=\qty{50}{\ohm}$, capacitance $C=\qty{18}{\nano\farad}$, and external voltage $V_0 \approx \qty{3}{\volt}$. The values of $R$, $L$, and $C$ completely determine the physical characteristics of the circuit. RLC circuits are some of the most elementary oscillator circuits and have applications across basic electronics. The circuit (Figure~\ref{fig:circuit}) reaches maximum current response at its resonant frequency $\omega_0$, and quickly drops to $1 / \sqrt{2}$ within $\omega_0\pm\beta$, while power response drops to $P \propto I^2=1/2$. This band-pass behavior is very useful for devices that need to filter particular frequency ranges, like radios. By adjusting $L$, $R$, and $C$, engineers can have full control over the band pass range. This powerful flexibility motivates our exploration of this circuit.
+RLC circuits are elementary oscillator circuits with applications across electronics. We construct Circuit~\ref{fig:circuit} with inductance $L=\qty{22}{\milli\henry}$, resistance $R=\qty{50}{\ohm}$, and capacitance $C=\qty{18}{\nano\farad}$. The circuit reaches maximum current response at its resonant frequency $\omega_0$ and quickly drops to $1 / \sqrt{2}$ within $\omega_0\pm\beta$, while power response drops to $P \propto I^2=1/2$. 
 
 
 \begin{figure}[H]
@@ -51,7 +50,19 @@ In this lab, we explore the admittance and phase of a series RLC circuit with in
 \label{fig:circuit}
 \end{figure}
 
-We can model the sinusoidal nature of the applied AC voltage with a complex phasor voltage $V_E=V_{0}\,e^{i\omega t}$. By Kirchhoff's Laws, the circuit will obey the following ODE.
+
+
+\section{Theory}\label{sec:theory}
+
+We can model the sinusoidal nature of the applied AC voltage with a complex phasor voltage in Eq.~\eqref{volt_phasor}
+
+\begin{equation}
+  \label{volt_phasor}
+V_E=V_{0}\,e^{i\omega t}
+\end{equation}
+
+
+By Kirchhoff's Laws, the circuit will obey the following ODE~\cite{gingrich}.
 
 \begin{equation}
   \label{eq:ode}
@@ -67,20 +78,20 @@ Or, expressed in standard driven harmonic oscillator form with damping factor $\
 
 \subsection{Modeling Transient Behavior}
 
-The characteristic equation $r^{2}+2\beta\,r+\omega_{0}^{2}=0$ has solutions found with the quadratic formula: $r_{1,2}=\frac{1}{2}(-2\beta\pm \sqrt{4\beta^{2}-4\omega_{0}^{2}})=-\beta\pm \sqrt{\beta^{2}-\omega_{0}^{2}}$. Since $\beta^{2}<\omega_{0}^{2}$, we know $r_{1,2}=-\beta\pm i\sqrt{\omega_{0}^{2}-\beta^{2}}$. This is an underdamped harmonic oscillator with a known transient solution,
+The characteristic equation of Eq.~\eqref{eq:standard_form} $r^{2}+2\beta\,r+\omega_{0}^{2}=0$ has solutions found with the quadratic formula: $r_{1,2}=\frac{1}{2}(-2\beta\pm \sqrt{4\beta^{2}-4\omega_{0}^{2}})=-\beta\pm \sqrt{\beta^{2}-\omega_{0}^{2}}$. Since $\beta^{2}<\omega_{0}^{2}$, we know $r_{1,2}=-\beta\pm i\sqrt{\omega_{0}^{2}-\beta^{2}}$. This is an underdamped harmonic oscillator with a known transient solution~\cite{gingrich},
 
 \begin{equation}
   \label{eq:transient}
   x(t) = e^{-\beta t}(c_{1}\,e^{i\omega_{1}t}+c_{2}\,e^{-i\omega_{1}t})=A\,e^{-\beta t}\cos(\omega_1 t + \phi)
 \end{equation}
 
-How long does it take for this solution to decay? Consider the damping time $t_D$ during which the circuit will decay to $1/e$ of the starting value. Referring to Eq.~\eqref{amp_phase}, we set $\beta\,t_D=1$ so $t_D=1/\beta=\qty{0.89}{\milli\s}$, during which we should see $\omega_1 / (2\pi\beta)=7$ cycles. Due to the minuscule nature of these values, the transient solution is of no use to us during this experiment. The transient solutions decay almost immediately after turning the circuit on. 
+The transient solution decays quickly enough for us to ignore it. Consider the damping time $t_D$ during which the circuit will decay to $1/e$ of the starting value. Referring to Eq.~\eqref{amp_phase}, we set $\beta\,t_D=1$ so $t_D=1/\beta=\qty{0.89}{\milli\s}$, during which we should see $\omega_1 / (2\pi\beta)=7$ cycles. The minuscule nature of these values show that the transient solutions decay almost immediately after turning the circuit on. 
 
 
 \subsection{Modeling Steady State Behavior}
 
 
-The known steady state solution to the ODE is $q_p(t)=De^{i\omega t}$ where $D=|q|\,e^{i\phi}$, where
+The known steady state solution~\cite{gingrich} to the ODE is $q_p(t)=De^{i\omega t}$ where $D=|q|\,e^{i\phi}$, where
 
 
 \begin{equation}
@@ -99,81 +110,43 @@ Differentiate $q(t)$ with respect to time to find the current $I(t)=i\omega\left
 I(t)=\frac{\omega\,V_{0}  / L}{\sqrt{(\omega_{0}^{2}-\omega ^{2})^{2}+4\beta^{2}\omega ^{2}}}\,e^{i\phi_{I}}\,e^{i\omega t}, \quad \phi_I=\phi + \pi / 2
 \end{equation}
 
-\section{Methods}\label{sec:methods}
+Where by Ohm's law, the voltage across the resistor is given by 
 
-We assembled Circuit \ref{fig:circuit} and sent a driving sinusoidal voltage $V_E$ from a function generator, and used an oscilloscope to measure both driving voltage $V_E$ and output voltage $V_R$ across the resistor. Before discussing our figures, please note that component and oscilloscope tolerances introduce measurement uncertainty. The voltage readings from our oscilloscope, particularly for $V_E$, were often flickering by $\pm5\%$ during measurement. The noted values of $R$, $L$, and $C$ are also subject to uncertainty. 
+\begin{equation}
+  \label{volt_r_phasor}
+  V_R(t)=\frac{R\omega\,V_{0}  / L}{\sqrt{(\omega_{0}^{2}-\omega ^{2})^{2}+4\beta^{2}\omega ^{2}}}\,e^{i(\omega t + \phi_I)}
+\end{equation}
+
+We now derive theoretical admittance and phase from Eq.~\eqref{curr_phase}. Substitute external voltage $V_{E}=V_{0}\,e^{i\omega t}$ in Eq. \eqref{amp_phase}. By Ohm's Law, $V_{E}=I(t) /Y$ and $V_{R}=I(t)$, where $Y$ is the admittance. Solving for $Y$ and taking the norm, we get theoretical admittance (Eq.~\eqref{y_th})
+
+\begin{equation}
+  \label{y_th}
+    |Y|_{\text{theoretical}}(\omega)=\frac{\omega  / L}{\sqrt{(\omega_{0}^{2}-\omega ^{2})^{2}+4\beta^{2}\omega ^{2}}}
+\end{equation}
+
+The theoretical phase shift $\phi_{I,\text{th}}$ is given by Eq.~\eqref{amp_phase} and Eq.~\eqref{curr_phase}:
+
+\begin{equation}
+  \label{phi_th}
+  \phi_{I,\text{th}}(\omega) = \tan^{-1} \left[{\frac{-2\beta\omega}{\omega_0^2 - \omega^2}}\right] + \frac{\pi}{2}
+\end{equation}
+
+Within the band pass, we expect $\phi_I(\omega_0\pm\beta)=\tan^{-1} \left[{\frac{-2\beta(\omega_0\pm\beta)}{\omega_0^2 - (\omega_0\pm\beta)^2}}\right]  + \frac{\pi}{2}\approx\tan^{-1} \left[{\frac{-2\beta\omega_0}{2\omega_0\beta}}\right]  + \frac{\pi}{2}=\pi/4$. Similarly, at the resonant frequency, we should see $\phi_I(\omega_0)=0$.
 
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.85\textwidth]{oscilloscope_traces.png}
-    \caption{Here we see some oscilloscope traces at interesting values. Starting from top-left, we see a phase shift of $\phi_I\mp\pi/4$ within the band pass ($\omega\pm\beta$), where amplitudes drop to $1/\sqrt{2}$.  In the top center at resonance ($\omega=\omega_0$), we see a phase shift of $\phi_I=0$ and equal amplitudes -- this is where the maximum response is achieved. In the bottom row, we see phase shift approach $\mp\pi/2$ as driving frequency $\omega$ approaches $\pm\infty$, while the amplitude approaches $0$.}
+    \caption{Here we plot traces of the real part of $V_E$ (Eq.~\eqref{volt_phasor}) and $V_E$ (Eq.~\eqref{volt_r_phasor}), assuming $\lvert V_E \rvert=1$ for convinience. Starting from top-left, we see a phase shift of $\phi_I\mp\pi/4$ within the band pass ($\omega\pm\beta$), where amplitudes drop to $1/\sqrt{2}$.  In the top center at resonance ($\omega=\omega_0$), we see a phase shift of $\phi_I=0$ and equal amplitudes -- this is where the maximum response is achieved. In the bottom row, we see phase shift approach $\mp\pi/2$ as driving frequency $\omega$ approaches $\pm\infty$, while the amplitude approaches $0$. We expect to see similar beheavior in our experiment.}
     \label{fig:traces}
 \end{figure}
 
 
-\subsection{Measuring Admittance}
+\section{Results}\label{sec:results}
 
+We assembled Circuit \ref{fig:circuit} and sent a driving sinusoidal voltage $V_E$ from a function generator. We measured both driving voltage $V_E$ and output resistor voltage $V_R$ with an oscilloscope, and calculated experimental admittance and phase.
 
- Admittance is a common way to characterize how easily AC current flows in a circuit, and is easy to measure experimentally and calculate theoretically. Substitute external voltage $V_{E}=V_{0}\,e^{i\omega t}$ in Eq. \eqref{amp_phase}. By Ohm's Law, $V_{E}=I(t) /Y$ and $V_{R}=I(t)$, where $Y$ is the admittance. Solving for $Y$ and taking the norm, we get two equations for theoretical and experimental admittance respectively. 
- 
-
-
-\begin{equation}
-  \label{y_exp}
-  \begin{aligned}
-    |Y|_{\text{theoretical}}(\omega)&=\frac{\omega  / L}{\sqrt{(\omega_{0}^{2}-\omega ^{2})^{2}+4\beta^{2}\omega ^{2}}}  \\
-    |Y|_{\text{experimental}}(\omega)&=\frac{V_{R}}{V_{E}}\frac{1}{R},
-  \end{aligned}
-\end{equation}
-
-
- On our oscilloscope, we used the built-in measurement tool to find $V_{R}$ and $V_{E}$. The value of $R=\qty{50}{\ohm}$ was already known. Figure~\ref{fig:admittance} shows the measured and theoretical admittance in Eqs. \eqref{y_exp}; raw data is tabulated in the appendix (Table~\ref{tab:data}).
-
-
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.85\textwidth]{amplitude_plot.png}
-    \caption{Admittance $|Y|$ vs.\ driving frequency $\omega$: experimental points and theoretical curve.  Each sub-tick is $1\beta$ with the graph centered at $\omega_0$. We see a reasonable fit to our theoretical curve in Eqs. \eqref{y_exp}, with discrepancies expected from component tolerances. Experiments used peak-to-peak voltage from an oscilloscope; as such, the measured voltage was scaled by $1/2$ to find amplitude. The red line marks resonant frequency $\omega_0$ where we see maximum response; the band pass lines $\omega_0\pm\beta$ intersect the curve at $|Y| = |Y|_\mathrm{max} / \sqrt{2}$, illustrating the narrow range of this circuit. Outside the band pass, power response would drop by $1/2$. }
-    \label{fig:admittance}
-\end{figure}
-
-
-
-\subsection{Measuring Phase}
-
-We used the cursor functionality on the oscilloscope to measure the change in time $\Delta t$ between the t-intercepts of each input and output. The experimental phase shift $\phi_{I,\text{exp}}$ is then given by $2\pi f\Delta t$. The theoretical phase shift $\phi_{I,\text{th}}$ is given by Eq.~\eqref{amp_phase} and Eq.~\eqref{curr_phase}. 
-
-
-\begin{equation}
-  \label{phi_exp}
-  \begin{aligned}
-  \phi_{I,\text{th}}(\omega) &= \tan^{-1} \left[{\frac{-2\beta\omega}{\omega_0^2 - \omega^2}}\right] + \frac{\pi}{2} \\
-  \phi_{I,\text{exp}}(\omega) &= 2\pi f\Delta t
-  \end{aligned}
-\end{equation}
-
-Within the band pass, we expect $\phi_I(\omega_0\pm\beta)=\tan^{-1} \left[{\frac{-2\beta(\omega_0\pm\beta)}{\omega_0^2 - (\omega_0\pm\beta)^2}}\right]  + \frac{\pi}{2}\approx\tan^{-1} \left[{\frac{-2\beta\omega_0}{2\omega_0\beta}}\right]  + \frac{\pi}{2}=\pi/4$. Similarly, at the resonant frequency, we should see $\phi_I(\omega_0)=0$. Figure~\ref{fig:phase} shows the measured and theoretical phase closely matching, with expected behavior around the band pass. See the Appendix (Table~\ref{tab:data}) for data. 
-
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.85\textwidth]{phase_plot.png}
-       \caption{Phase $\phi_I$ vs.\ driving frequency $\omega$: experimental points and theoretical curve. Each sub-tick is $1\beta$ with the graph centered at $\omega_0$. We see a close fit to our theoretical curve in Eqs. \eqref{phi_exp}, with discrepancies expected from component tolerances. The red line marks resonant frequency $\omega_0$ where we see a phase shift of $0$; the band pass lines $\omega_0\pm\beta$ intersect the curve at $\phi_I = \pm\pi / 4$. Outside the band pass, phase shift slowly approaches asymptotes of $\pm\pi/2$.}
-    \label{fig:phase}
-\end{figure}
-
-\newpage
-
-
-\section{Conclusions}\label{sec:conclusions}
-
-We set up a series RLC circuit and powered it with a variable sinusoidal driving voltage through a function generator. We used an oscilloscope to measure external input voltage and output resistor voltage, using that along with time shift data to calculate experimental phase and admittance. After comparing these measurements to known theoretical equations for admittance and phase, we found a reasonable fit for both. We took note of interesting behavior at the resonant frequency $\omega=\omega_0$, where output voltage matches input voltage in both phase and amplitude, and explored how amplitude falls off within the band pass of $\omega=\omega_0\pm\beta$. Since our experimental data matches our theoretical predictions, we consider this a successful experiment. 
-
-\appendix
-\section{Data Table}
-\begin{table}[htbp]
+\begin{table}[H]
 \centering
 \caption{Series RLC frequency response: external and resistor voltages, time shift, phase shift, and amplitude ratio (admittance). The figures are presented in angular frequency domain, which involves scaling frequency by $2\pi$.}
 \label{tab:data}
@@ -187,7 +160,7 @@ We set up a series RLC circuit and powered it with a variable sinusoidal driving
   S[table-format=1.2]
 }
 \toprule
-{Frequency (\unit{kHz})} & {$V_R$ (\unit{mV})} & {$V_{E}$ (\unit{V})} & {Time shift (\unit{\micro\second})} & {Phase shift (\unit{rad})} & {Admittance} \\
+{f (\unit{kHz})} & {$V_R$ (\unit{mV})} & {$V_{E}$ (\unit{V})} & {$\Delta t$ (\unit{\micro\second})} & {$\phi_{I,\text{exp}}$ (\unit{rad})} & {$|Y|_{\text{exp}}$} \\
 \midrule
  2.00 &  28.00 & 2.12 &  124.00 &  1.56 & 0.01 \\
  4.00 &  68.00 & 2.12 &   60.00 &  1.51 & 0.03 \\
@@ -212,5 +185,55 @@ We set up a series RLC circuit and powered it with a variable sinusoidal driving
 \bottomrule
 \end{tabular}
 \end{table}
+
+
+
+Component and oscilloscope tolerances introduced measurement uncertainty in our measurements. The voltage readings from our oscilloscope, particularly for $V_E$, were often flickering by $\pm5\%$ during measurement. The noted values of $R$, $L$, and $C$ are also subject to uncertainty. We used the built-in peak-to-peak measurement tool on our oscilloscope to find $V_{R}$ and $V_{E}$. The value of $R=\qty{50}{\ohm}$ was already known. Experimental admittance is given by Ohm's Law in Eq.~\eqref{y_exp}.
+
+\begin{equation}
+  \label{y_exp}
+    |Y|_{\text{exp}}(\omega)=\frac{V_{R}}{V_{E}}\frac{1}{R}
+\end{equation}
+
+We used the cursor functionality on the oscilloscope to measure the change in time $\Delta t$ between the t-intercepts of each input and output. For each frequency $f$, the experimental phase shift is given by Eq.~\eqref{phi_exp}.
+
+\begin{equation}
+  \label{phi_exp}
+  \phi_{I,\text{exp}}(\omega) = 2\pi f\Delta t
+\end{equation}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{amplitude_plot.png}
+    \caption{Admittance $|Y|$ vs.\ driving frequency $\omega$: experimental points and theoretical curve.  Each sub-tick is $1\beta$ with the graph centered at $\omega_0$. We see a reasonable fit to our theoretical curve, with discrepancies expected from component tolerances and the fundamental assumptions of our experiment. The red line marks resonant frequency $\omega_0$ where we see maximum response; the band pass lines $\omega_0\pm\beta$ intersect the curve at $|Y| = |Y|_\mathrm{max} / \sqrt{2}$, illustrating the narrow range of this circuit. Outside the band pass, power response would drop by $1/2$. }
+    \label{fig:admittance}
+\end{figure}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{phase_plot.png}
+       \caption{Phase $\phi_I$ vs.\ driving frequency $\omega$: experimental points and theoretical curve. Each sub-tick is $1\beta$ with the graph centered at $\omega_0$. We see a close fit to our theoretical curve, with discrepancies expected from component tolerances and assumptions. The red line marks resonant frequency $\omega_0$ where we see a phase shift of $0$; the band pass lines $\omega_0\pm\beta$ intersect the curve at $\phi_I = \pm\pi / 4$. Outside the band pass, phase shift slowly approaches asymptotes of $\pm\pi/2$.}
+    \label{fig:phase}
+\end{figure}
+
+
+\section{Conclusions}\label{sec:conclusions}
+
+We characterized a series RLC circuit with $L=\qty{22}{\milli\henry}$, $R=\qty{50}{\ohm}$, and $C=\qty{18}{\nano\farad}$ by measuring admittance and phase shift across a range of driving frequencies. Our experimental measurements closely matched theoretical predictions for both quantities, with some discrepancies introduced by component tolerances. The circuit exhibited maximum voltage response at the resonant frequency $\omega_0=\qty{50}{\kilo\hertz}$ with rapid damping to $1/\sqrt{2}$ within $\omega_0\pm\beta$ for $\beta=\qty{1.1}{\kilo\hertz}$.  Component and oscilloscope tolerances introduce measurement uncertainty, but  
+
+This demonstrates band-pass behavior essential for frequency filtering applications in basic electronics components like radios.
+
+\begin{thebibliography}{9}
+\bibitem{gingrich}
+D. M. Gingrich, \textit{Practical Electronics}, Chapter 2: Driven RLC Circuits.
+\url{https://www-f9.ijs.si/~gregor/ElektronikaVaje/ElectronicsLectures_GinGrich.pdf}
+
+\bibitem{copilot}
+GitHub Copilot, AI-powered code completion tool by GitHub.
+Used for assistance with Python code development and LaTeX formatting.
+\url{https://github.com/features/copilot}
+\end{thebibliography}
 
 \end{document}

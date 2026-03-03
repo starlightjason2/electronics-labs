@@ -19,7 +19,7 @@ omega_0 = 1 / np.sqrt(L * C)
 beta = R / (2 * L)
 
 df["omega"] = 2 * math.pi * df["f"]
-df["v_in"] = df["v_in"] / 2
+# df["v_in"] = df["v_in"] / 2
 df["v_out"] = df["v_out"] / 1000
 df["dT"] = df["dT"] * 1e-6
 df["phi"] = df["omega"] * df["dT"]
@@ -68,7 +68,7 @@ def setup_omega_axis(ax: Axes, n_beta: int = 30) -> None:
         color="darkorange",
         linewidth=1,
         alpha=0.3,
-        label="$\\omega_0 \\pm \\beta$",
+        label="$\\omega_0 \\pm \\beta$ (Band Pass)",
     )
 
 
@@ -89,7 +89,7 @@ def phase_plot(df: pd.DataFrame) -> None:
         zorder=10,
     )
     ax.legend()
-    fig.savefig(paths.output_dir / "phase_plot.png", dpi=1200)
+    fig.savefig(paths.output_dir / "phase_plot.png", dpi=600)
 
 
 def admittance_plot(df: pd.DataFrame) -> None:
@@ -107,7 +107,8 @@ def admittance_plot(df: pd.DataFrame) -> None:
         label="Admittance (Experimental)",
         zorder=10,
     )
-    fig.savefig(paths.output_dir / "amplitude_plot.png", dpi=1200)
+    ax.legend()
+    fig.savefig(paths.output_dir / "amplitude_plot.png", dpi=600)
 
 
 def oscilloscope_traces_plot(
@@ -186,7 +187,7 @@ def oscilloscope_traces_plot(
         axes[j].set_visible(False)
     fig.tight_layout(rect=[0, 0, 1, 0.93])  # type: ignore
 
-    fig.savefig(paths.output_dir / "oscilloscope_traces.png", dpi=1200)
+    fig.savefig(paths.output_dir / "oscilloscope_traces.png", dpi=600)
     plt.close(fig)
 
 
