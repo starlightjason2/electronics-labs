@@ -12,6 +12,55 @@ import pint
 from matplotlib.markers import MarkerStyle
 
 
+def log_func(x, a, b):
+    """Logarithmic fit function."""
+    return a * (np.log(b * x))
+
+
+def line_func(x, m, b):
+    """Linear fit function."""
+    return m * x + b
+
+
+def format_sig_figs(value, sig_figs: int = 3):
+    """Format a number or list of numbers to specified significant figures in LaTeX scientific notation."""
+    if value == 0:
+        return "0"
+
+    # Use numpy's format_float_scientific
+    sci_str = np.format_float_scientific(value, precision=sig_figs - 1, exp_digits=1)
+
+    # Convert to LaTeX format: "1.23e-02" -> "1.23 \times 10^{-2}"
+    if "e" in sci_str:
+        mantissa, exponent = sci_str.split("e")
+        exponent = exponent.lstrip("+").lstrip("0") or "0"
+        return f"{mantissa} \\times 10^{{{exponent}}}"
+
+    return sci_str
+
+
+def add_equation_text(
+    equation: str,
+    params: dict = {},
+):
+    """Format equation with parameters for use in legend label.
+
+    Args:
+        equation: General form equation string (e.g., "$V = m \\, I + b$")
+        params: Dictionary mapping variable names to values (e.g., {"m": "1.23", "b": "4.56"})
+
+    Returns:
+        Formatted string with equation and parameters on separate lines
+    """
+    if not params:
+        return equation
+
+    param_str = ",  ".join([f"{k} = {format_sig_figs(v)}" for k, v in params.items()])
+    if equation:
+        return f"{equation},\n${param_str}$"
+    return f"${param_str}$"
+
+
 def frequency_of_square_wave(
     time_us: np.ndarray | pd.Series,
     voltage: np.ndarray | pd.Series,

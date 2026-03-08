@@ -205,3 +205,28 @@ oscilloscope_traces_plot(
         ]
     )
 )
+
+# Part 1 data subplots
+fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(8, 10))
+
+ax1.plot(df["f"] / 1000, df["v_in"], marker="o")
+ax1.set_ylabel("$V_{in}$ (V)")
+ax1.set_xlabel("Frequency (kHz)")
+ax1.grid(True, alpha=0.3)
+ax1.set_title("Input Voltage vs Frequency")
+
+ax2.plot(df["f"] / 1000, df["v_out"], marker="o", color="C1")
+ax2.set_ylabel("$V_{out}$ (V)")
+ax2.set_xlabel("Frequency (kHz)")
+ax2.grid(True, alpha=0.3)
+ax2.set_title("Output Voltage vs Frequency")
+
+ax3.plot(df["f"] / 1000, df["dT"] * 1e6, marker="o", color="C2")
+ax3.set_ylabel("$\\Delta t$ ($\\mu$s)")
+ax3.set_xlabel("Frequency (kHz)")
+ax3.grid(True, alpha=0.3)
+ax3.set_title("Time Shift vs Frequency")
+
+fig.tight_layout()
+fig.savefig(paths.output_dir / "part1_data.png", dpi=600)
+plt.close(fig)

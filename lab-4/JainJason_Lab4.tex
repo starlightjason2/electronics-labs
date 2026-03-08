@@ -1,48 +1,95 @@
 \documentclass[11pt]{article}
-\usepackage[margin=0.75in]{geometry}
+\usepackage[margin=1in]{geometry}
 \usepackage{graphicx}
 \usepackage{siunitx}
 \usepackage{amsmath}
 \usepackage{float}
 \usepackage{caption}
 
-\title{Lab 3: Inductors and Time-Dependent Signals}
+\title{Lab 4: Inductors and Active Filters}
 \author{Jason Jain \\
         Oregon State University, Department of Physics \\
         Electronics Laboratory}
 \date{\today}
 
-\graphicspath{{output/}}
+\graphicspath{{output/}{./}{./output/}{lab-4/output/}}
 
 \begin{document}
 
 \maketitle
 
-\section{Time dependent analysis of $RL$ Circuits}
+\section{Time-dependent analysis of active RL filters}
 
-The resistance is $\qty{997}{\ohm}$ and the inductance is $\qty{21.4}{\milli\henry}$
+We measure the time constant of the RL circuit, first calculating the theoretical value, then comparing it to the experimental value. The resistance is $R=\qty{996}{\ohm}$ and the inductance is $L=\qty{23.1}{\milli\henry}$, giving us a theoretical time constant of $\tau = L/R = \qty{23.2}{\micro\second}$. Our experimental value is found by observing the time it takes for the inductor current to reach $1/e$ of its total value while discharging, and $1 - (1/e)$ of its total value while charging.
 
-% \ref{fig:low_pass_1kHz}
+Using an op-amp based active filter configuration with inductors, we measure the output waveforms and compare them to the input signals. The low-pass active RL filter demonstrates integration behavior when presented with a square wave input at \qty{10}{\kilo\hertz}. The output voltage shows the characteristic exponential charging and discharging curves as the inductor responds to the input transitions.
+
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.85\textwidth]{low_pass_square_5kHz.png}
-    \caption{Measurement of time constact $\tau = RC$ by determining the time for the output to drop to $1/e$ of the
-    maximum (in green)and to rise to $1 - (1/e)$ of the maximum (in red). Both values are equal to $\tau = \qty{62}{\micro\second}$.}
-    \label{fig:low_pass_1kHz}
+    \includegraphics[width=0.85\textwidth]{output/low_pass_square_wave_10kHz.png}
+    \caption{Active RL low-pass filter response to \qty{10}{\kilo\hertz} square wave input, showing integration behavior with exponential charging and discharging.}
+    \label{fig:low_pass_10kHz}
 \end{figure}
 
+The high-pass active RL filter exhibits differentiation behavior, producing voltage spikes at the transitions of the input square wave. This demonstrates the filter's ability to pass high-frequency components while blocking low-frequency signals.
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{output/high_pass_square_wave_10kHz.png}
+    \caption{Active RL high-pass filter response to \qty{10}{\kilo\hertz} square wave input, showing differentiation behavior with voltage spikes at transitions.}
+    \label{fig:high_pass_10kHz}
+\end{figure}
 
-\section{The RL Integrator (High-Pass Filter)}
+\newpage
 
+\section{Fourier analysis of filtered signals}
 
+We perform Fast Fourier Transform (FFT) analysis on the output signals from the low-pass filter to examine their frequency content. The FFT reveals how the filter attenuates different frequency components of the input signal.
 
+For a \qty{400}{\hertz} input signal, the FFT shows the fundamental frequency and its harmonics, with higher harmonics progressively attenuated by the low-pass filter characteristics.
 
-\section{The LR Differentiator (Low-Pass Filter)}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{output/fft_low_pass_400Hz.png}
+    \caption{FFT analysis of low-pass filter output with \qty{400}{\hertz} input, showing fundamental frequency and attenuated harmonics.}
+    \label{fig:fft_400Hz}
+\end{figure}
 
+At \qty{200}{\hertz}, the FFT analysis shows similar behavior with the fundamental frequency dominant and harmonics progressively reduced in amplitude.
 
-\section{Frequency response of both low-pass and high-pass filters}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{output/fft_low_pass_200Hz.png}
+    \caption{FFT analysis of low-pass filter output with \qty{200}{\hertz} input.}
+    \label{fig:fft_200Hz}
+\end{figure}
 
+\newpage
 
+\section{Frequency response of active RL high-pass filter}
+
+We characterize the frequency response of the active RL high-pass filter by measuring its gain and phase shift across a range of frequencies from \qty{1}{\hertz} to \qty{1}{\mega\hertz}. Using the time constant of $\tau=\qty{23.2}{\micro\second}$, we find the theoretical characteristic \textit{angular} frequency of $\omega_c=1 / \tau=\qty{43.1}{\kilo\hertz}$.
+
+The Bode plot shows the characteristic high-pass behavior with a cutoff frequency where the gain is \qty{-3}{\decibel} below the passband level. Below the cutoff frequency, the gain decreases at approximately \qty{20}{\decibel} per decade.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{output/high_pass_bode_plot.png}
+    \caption{Active high-pass filter Bode plot showing gain vs frequency. The cutoff frequency is marked where gain drops by \qty{-3}{\decibel}.}
+    \label{fig:high_pass_bode}
+\end{figure}
+
+The phase response shows the characteristic \ang{45} phase shift at the cutoff frequency, transitioning from \ang{90} at low frequencies to \ang{0} at high frequencies.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{output/high_pass_phase_plot.png}
+    \caption{Active high-pass filter phase plot showing phase shift vs frequency.}
+    \label{fig:high_pass_phase}
+\end{figure}
+
+\section{[Section 4]}
+
+[Content]
 
 \end{document}
