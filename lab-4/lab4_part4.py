@@ -50,7 +50,7 @@ A_fit, tau_fit = popt
 # --- PLOTTING ---
 ax1: Axes
 ax2: Axes
-fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 10))
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))
 
 # Ax1 (Time Domain)
 ax1.plot(

@@ -1,0 +1,5 @@
+{
+    "autoApprove": true,
+    "workspaceTrust": true,
+    "trustedCommands": ["executeBash", "fsWrite", "fsReplace", "fsRead", "listDirectory", "fileSearch"]
+}

@@ -251,12 +251,12 @@ def high_pass_phase_theoretical(omega_values: np.ndarray, omega_c: float) -> np.
 
 
 def low_pass_gain_theoretical(omega_values: np.ndarray, omega_c: float) -> np.ndarray:
-    """Gain in dB for first-order low-pass: 20 log10(1/√(1+(ω/ω_c)²))."""
+    """Admittance in dB for first-order low-pass: 20 log10(1/√(1+(ω/ω_c)²))."""
     return 20 * np.log10(1 / np.sqrt(1 + (omega_values / omega_c) ** 2))
 
 
 def high_pass_gain_theoretical(omega_values: np.ndarray, omega_c: float) -> np.ndarray:
-    """Gain in dB for first-order high-pass."""
+    """Admittance in dB for first-order high-pass."""
     return 20 * np.log10(
         (omega_values / omega_c) / np.sqrt(1 + (omega_values / omega_c) ** 2)
     )
@@ -283,19 +283,20 @@ def _log_extrapolate_frequency(
     return 10**x_target
 
 
-def plot_characteristic_phase(df: pd.DataFrame, filter_type: str):
+def plot_characteristic_phase(df: pd.DataFrame, filter_type: str, ax=None):
+    ax = ax or plt.gca()
     critical_omega = math.pi / 4 if filter_type == "high" else -math.pi / 4
     critical_deg = float(np.degrees(critical_omega))
     phi_deg = pd.Series(np.degrees(df["phi"]))
     closest_idx = find_closest_index(phi_deg, critical_deg)
     f_c_exp = _log_extrapolate_frequency(df["f"], phi_deg, critical_deg, closest_idx)
-    plt.axhline(
+    ax.axhline(
         y=critical_deg,
         color="red",
         linestyle="--",
         label="45° characteristic line",
     )
-    plt.axvline(
+    ax.axvline(
         x=f_c_exp,
         color="steelblue",
         linestyle="--",
@@ -375,20 +376,22 @@ def create_bode_plot(
     find_characteristic=True,
     find_fit=True,
 ) -> None:
-    """Create Bode (gain) plot (theory + experimental) and save. Uses lab4 standard: logspace(0,6),
+    """Create Bode (admittance) plot (theory + experimental) and save. Uses lab4 standard: logspace(0,6),
     -3 dB line with find_closest_index and axvline, equation at bottom with ω_c in Hz.
     """
     output_dir.mkdir(exist_ok=True)
 
     plt.figure(figsize=(10, 6))
     plt.xlabel("Frequency (Hz)")
-    plt.ylabel("Gain (dB)")
+    plt.ylabel("Admittance (dB)")
     plt.grid(True, which="both", alpha=0.3)
 
     f_values = np.logspace(0, 6, num=100)
     omega_values = math.tau * f_values
 
-    plt.scatter(df["f"], df["db"], marker=MarkerStyle("o"), label="Gain (Experimental)")
+    plt.scatter(
+        df["f"], df["db"], marker=MarkerStyle("o"), label="Admittance (Experimental)"
+    )
 
     if find_fit:
         if filter_type == "high":
@@ -398,7 +401,7 @@ def create_bode_plot(
             gain_theoretical = low_pass_gain_theoretical(omega_values, omega_c)
             eq_text = r"$A(f) = 20\log_{10}\left(\dfrac{1}{\sqrt{1+(2\pi\,f/\omega_c)^2}}\right)$"
 
-        plt.semilogx(f_values, gain_theoretical, label="Gain (Theoretical)")
+        plt.semilogx(f_values, gain_theoretical, label="Admittance (Theoretical)")
 
         eq_text += f"\n$\\omega_{{c,theoretical}} = {omega_c:.2f}$ Hz"
         eq_text += f"\n$f_{{c,theoretical}} = {(omega_c / math.tau):.2f}$ Hz"
@@ -420,19 +423,87 @@ def create_bode_plot(
     plt.close()
 
 
-def plot_characteristic_freq(df: pd.DataFrame):
+def plot_characteristic_freq(df: pd.DataFrame, ax=None):
+    ax = ax or plt.gca()
     critical_db = -3
     closest_idx = find_closest_index(df["db"], critical_db)
     f_c_exp = _log_extrapolate_frequency(df["f"], df["db"], critical_db, closest_idx)
-    plt.axhline(
+    ax.axhline(
         y=critical_db,
         color="red",
         linestyle="--",
         label="-3 dB characteristic line",
     )
-    plt.axvline(
+    ax.axvline(
         x=f_c_exp,
         color="steelblue",
         linestyle="--",
         label=f"$f_{{c,experimental}}$ = {f_c_exp:.0f} Hz",
     )
+
+
+def create_bode_and_phase_plot(
+    df: pd.DataFrame,
+    omega_c: float,
+    filter_type: str,
+    output_dir: Path,
+    find_characteristic=True,
+    find_fit=True,
+) -> None:
+    """Create combined Bode and phase plot in a single row and save."""
+    output_dir.mkdir(exist_ok=True)
+    sign = -1 if filter_type == "low" else 1
+    df["phi"] = sign * math.tau * df["f"] * df["dT"]
+
+    f_values = np.logspace(0, 6, num=100)
+    omega_values = math.tau * f_values
+
+    fig, (ax_bode, ax_phase) = plt.subplots(1, 2, figsize=(14, 5))
+
+    # --- Bode plot ---
+    ax_bode.scatter(df["f"], df["db"], marker="o", label="Admittance (Experimental)")
+    ax_bode.set_xlabel("Frequency (Hz)")
+    ax_bode.set_ylabel("Admittance (dB)")
+    ax_bode.set_xscale("log")
+    ax_bode.grid(True, which="both", alpha=0.3)
+
+    if find_fit:
+        if filter_type == "high":
+            gain_th = high_pass_gain_theoretical(omega_values, omega_c)
+        else:
+            gain_th = low_pass_gain_theoretical(omega_values, omega_c)
+        ax_bode.plot(f_values, gain_th, label="Admittance (Theoretical)")
+
+    if find_characteristic:
+        plot_characteristic_freq(df, ax=ax_bode)
+
+    ax_bode.legend(fontsize=8)
+
+    # --- Phase plot ---
+    ax_phase.scatter(
+        df["f"], np.degrees(df["phi"]), marker="o", label="Phase (Experimental)"
+    )
+    ax_phase.set_xlabel("Frequency (Hz)")
+    ax_phase.set_ylabel("$\\phi$ (degrees)")
+    ax_phase.set_xscale("log")
+    ax_phase.grid(True, which="both", alpha=0.3)
+
+    if find_fit:
+        if filter_type == "high":
+            phase_th = high_pass_phase_theoretical(omega_values, omega_c)
+        else:
+            phase_th = low_pass_phase_theoretical(omega_values, omega_c)
+        ax_phase.plot(
+            f_values,
+            np.degrees(phase_th),
+            label=f"{filter_type.capitalize()} Pass Phase (Theoretical)",
+        )
+
+    if find_characteristic:
+        plot_characteristic_phase(df, filter_type, ax=ax_phase)
+
+    ax_phase.legend(fontsize=8)
+
+    fig.tight_layout()
+    fig.savefig(output_dir / f"{filter_type}_pass_bode_and_phase.png", dpi=150)
+    plt.close(fig)

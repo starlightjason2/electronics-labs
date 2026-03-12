@@ -24,7 +24,7 @@ def square_wave_func(n, magnitude):
 
 ax1: Axes
 ax2: Axes
-fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 10))
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))
 
 ax1.plot(
     low_pass_df["t_in"], low_pass_df["v_in"], label="Voltage In", color="goldenrod"
@@ -37,6 +37,7 @@ ax1.grid(True, alpha=0.3)
 ax2.scatter(fft_df["n"], fft_df["amplitude"], zorder=100, label="FFT Experimental")
 ax2.set_xlabel("$n$th Harmonic")
 ax2.set_ylabel("Fourier Coefficient")
+ax2.set_xticks(np.arange(0, int(fft_df["n"].max()) + 1, 1))
 ax2.grid(True, alpha=0.3)
 
 # fit square wave function (only odd harmonics where signal exists)
@@ -50,13 +51,16 @@ popt, _ = curve_fit(
 magnitude_fit = popt[0]
 
 # plot fit with stem
-n_stem = np.arange(1, 10, 1)
-ax2.stem(
-    n_stem,
-    square_wave_func(n_stem, magnitude_fit),
-    linefmt="tomato",
-    markerfmt="ro",
-    basefmt=" ",
+n_plot = np.arange(1, 10, 1)
+ax2.scatter(
+    n_plot,
+    square_wave_func(n_plot, magnitude_fit),
+    s=120,
+    facecolors="none",
+    edgecolors="tomato",
+    linestyles="dashed",
+    linewidths=1.5,
+    zorder=50,
     label=add_equation_text(
         "$A_n = |A| \\cdot \\frac{1}{n\\pi} \\cdot (2 - 2(-1)^n)$",
         {"|A|": magnitude_fit},

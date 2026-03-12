@@ -6,7 +6,7 @@
 \usepackage{float}
 \usepackage{caption}
 
-\title{Lab 5: [Title]}
+\title{Lab 5: Op-Amps I}
 \author{Jason Jain \\
         Oregon State University, Department of Physics \\
         Electronics Laboratory}
@@ -18,27 +18,70 @@
 
 \maketitle
 
-\section{[Section 1]}
+\section{Op-amp circuits}
 
-[Content]
+\subsection{Open-loop gain}
+
+We set up an open-loop op-amp circuit. Table~\ref{tab:part1a} shows the measured voltages. At the critical positive voltage $V_+ = \qty{1.33}{\volt}$, the negative voltage jumps up from $V_- = \qty{0.7}{\volt}$ to $V_-=\qty{2}{\volt}$.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{cc}
+        \hline
+        $V_+$ (\unit{\volt}) & $V_-$ (\unit{\volt}) \\
+        \hline
+        0.5 & 0.7 \\
+        1.3 & 0.7 \\
+        1.33 & 2.0 \\
+        3.3 & 2.0 \\
+        \hline
+    \end{tabular}
+    \caption{Open-loop gain measurements.}
+    \label{tab:part1a}
+\end{table}
+
+\subsection{Follower}
+
+Figure~\ref{fig:part1b} shows the follower configuration data with a linear fit. The unity‑gain buffer matches $v_-$ to $v_+$.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.85\textwidth]{output/[figure].png}
-    \caption{[Caption]}
-    \label{fig:[label]}
+    \includegraphics[width=0.5\textwidth]{output/part1b.png}
+    \caption{Follower configuration: $v_-$ vs $v_+$ with linear fit.}
+    \label{fig:part1b}
 \end{figure}
 
-\section{[Section 2]}
+\subsection{Non-inverting}
 
-[Content]
+Figure~\ref{fig:noninverting_opamp} shows the non-inverting amplifier response at different frequencies and input amplitudes. The output amplitude scales with the gain set by the feedback resistors.
 
-\section{[Section 3]}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{output/noninverting_opamp.png}
+    \caption{Non-inverting op-amp response at various frequencies and input amplitudes.}
+    \label{fig:noninverting_opamp}
+\end{figure}
 
-[Content]
+\newpage
 
-\section{[Section 4]}
+\section{Part 2}
 
-[Content]
+We build Circuit~\ref{fig:circuit} to and record voltage across the diode as a function of current (Figure~\ref{fig:part2}). 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{output/part2-circuit.png}
+    \caption{Closed-loop op-amp circuit for linearizing a diode.}
+    \label{fig:circuit}
+\end{figure}
+
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{output/part2.png}
+    \caption{Non‑inverting amplifier (left) and diode characteristic (right). The op-amp turned a non-ohmic circuit element with a logarithmic voltage relationship, into an ohmic component with a linear voltage relationship.}
+    \label{fig:part2}
+\end{figure}
 
 \end{document}
