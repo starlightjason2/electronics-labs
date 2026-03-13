@@ -1,4 +1,4 @@
-"Time (ms, ms) - Channel 1",Voltage (V) - Channel 1,"Time (ms, ms) - Channel 2",Voltage (V) - Channel 2
+t_in,v_in,t_out,v_out
 0,0,0,0
 0.0002,0,0.0002,0
 0.0004,0,0.0004,0

@@ -42,7 +42,7 @@ We set up an open-loop op-amp circuit. Table~\ref{tab:part1a} shows the measured
 
 \subsection{Follower}
 
-Figure~\ref{fig:part1b} shows the follower configuration data with a linear fit. The unity‑gain buffer matches $v_-$ to $v_+$.
+Figure~\ref{fig:part1b} shows the follower configuration data with a linear fit. The unity-gain buffer matches $v_-$ to $v_+$. The fitted slope is $m = 1.003$, a $0.3\%$ difference from the theoretical value of $m = 1$, confirming near-ideal unity-gain behavior.
 
 \begin{figure}[H]
     \centering
@@ -66,7 +66,7 @@ Figure~\ref{fig:noninverting_opamp} shows the non-inverting amplifier response a
 
 \section{Part 2}
 
-We build Circuit~\ref{fig:circuit} to and record voltage across the diode as a function of current (Figure~\ref{fig:part2}). 
+We build Circuit~\ref{fig:circuit} and record voltage across the diode as a function of current (Figure~\ref{fig:part2}). The fitted slope $m = \qty{-0.109}{\volt\per\milli\ampere}$ corresponds to a feedback resistance of $R_f = |1/m| = \qty{9.2}{\kilo\ohm}$, a $8\%$ difference from the nominal $\qty{10}{\kilo\ohm}$ potentiometer. The op-amp linearizes the diode's logarithmic $I$--$V$ characteristic into a linear relationship. 
 
 \begin{figure}[H]
     \centering

@@ -28,7 +28,7 @@ ax1.plot(
     "--",
     label=add_equation_text(
         "$V = m\\,I+b$",
-        {"m": m, "b": b},
+        {"m": (m, "V/mA"), "b": (b, "V")},
     ),
 )
 
@@ -46,7 +46,7 @@ ax2.plot(
     x_fit,
     log_func(x_fit, *popt),
     "--",
-    label=add_equation_text("$V = a\\,\\ln(b\\,I)$", {"a": a, "b": b}),
+    label=add_equation_text("$V = a\\,\\ln(b\\,I)$", {"a": (a, "V"), "b": (b, "1/A")}),
 )
 ax2.set_xlabel("Current (A)")
 ax2.set_ylabel("Voltage (V)")

@@ -23,7 +23,7 @@ ax.plot(
     line_func(x_fit, *popt),
     label=add_equation_text(
         "$V = m\\,I+b$",
-        {"m": m, "b": b},
+        {"m": m, "b": (b, "V")},
     ),
 )
 ax.set_xlabel("v_+ (V)")
