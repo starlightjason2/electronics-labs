@@ -23,11 +23,11 @@
 
 We measure the time constant of the RL circuit, first calculating the theoretical value, then comparing it to the experimental value. The resistance is $R=\qty{996}{\ohm}$ and the inductance is $L=\qty{23.1}{\milli\henry}$, giving us a theoretical time constant of $\tau = L/R = \qty{23.2}{\micro\second}$. Our experimental value is found by observing the time it takes for the inductor current to reach $1/e$ of its total value while discharging, and $1 - (1/e)$ of its total value while charging.
 
-The low-pass RL filter exhibits integration behavior, charging/discharging over the period of the input square wave. The experimental time constant $\tau=\qty{16.9}{\micro\s}$  (average of the two values in Figure~\ref{fig:low_pass_10kHz}) and theoretical time constant $\tau=\qty{23.2}{\micro\s}$ have a percent difference of $27\%$. This is a much higher percent difference than the RC circuit, which could indicate that inductors have more measurement uncertainty or operation inefficiencies than capacitors.
+The low-pass RL filter exhibits integration behavior, charging/discharging over the period of the input square wave. The experimental time constant $\tau=\qty{16.9}{\micro\s}$  (average of the two values in Figure~1) and theoretical time constant $\tau=\qty{23.2}{\micro\s}$ have a percent difference of $27\%$. This is a much higher percent difference than the RC circuit, which could indicate that inductors have more measurement uncertainty or operation inefficiencies than capacitors.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.85\textwidth]{output/low_pass_square_wave_10kHz.png}
+    \includegraphics[width=0.75\textwidth]{output/low_pass_square_wave_10kHz.png}
     \caption{Active RL low-pass filter response to \qty{10}{\kilo\hertz} square wave input, showing integration behavior with exponential charging and discharging.}
     \label{fig:low_pass_10kHz}
 \end{figure}
@@ -37,7 +37,7 @@ The high-pass RL filter exhibits differentiation behavior, charging/discharging 
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.85\textwidth]{output/high_pass_square_wave_10kHz.png}
+    \includegraphics[width=0.75\textwidth]{output/high_pass_square_wave_10kHz.png}
     \caption{Active RL high-pass filter response to \qty{10}{\kilo\hertz} square wave input, showing differentiation behavior with voltage spikes at transitions.}
     \label{fig:high_pass_10kHz}
 \end{figure}
@@ -48,10 +48,10 @@ The high-pass RL filter exhibits differentiation behavior, charging/discharging 
 
 We characterize the frequency response of the active RL high-pass filter by measuring its admittance and phase shift across a range of frequencies from \qty{1}{\hertz} to \qty{1}{\mega\hertz}. Using time constant $\tau=\qty{23.2}{\micro\second}$, the theoretical characteristic angular frequency is $\omega_c=1 / \tau=\qty{43.1}{\kilo\rad\per\s}$, and the characteristic frequency is $f_c = \omega_c / 2\pi =\qty{6.86}{\kilo\hertz}$.
 
-The Bode plot (Figure~\ref{fig:high_pass_bode_phase}, left) shows characteristic high-pass behavior with a cutoff frequency $f_{c,\mathrm{exp}}=\qty{7.5}{\kilo\hertz}$ where the admittance is \qty{-3}{\decibel} below the passband level. Compared to the theoretical $f_{c,\mathrm{th}}=\qty{6.86}{\kilo\hertz}$, this gives a percent difference of 9.3\%.
+The Bode plot (Figure~3, left) shows characteristic high-pass behavior with a cutoff frequency $f_{c,\mathrm{exp}}=\qty{7.5}{\kilo\hertz}$ where the admittance is \qty{-3}{\decibel} below the passband level. Compared to the theoretical $f_{c,\mathrm{th}}=\qty{6.86}{\kilo\hertz}$, this gives a percent difference of 9.3\%.
 
 
-The phase response (Figure~\ref{fig:high_pass_bode_phase}, right) shows the characteristic \ang{45} phase shift at the cutoff frequency, transitioning from \ang{90} at low frequencies to \ang{0} at high frequencies, with a poor fit at low frequencies. This behavior is expected for inductors. For both plots, the fit is near perfect around the characteristic frequency.
+The phase response (Figure~3, right) shows the characteristic \ang{45} phase shift at the cutoff frequency, transitioning from \ang{90} at low frequencies to \ang{0} at high frequencies, with a poor fit at low frequencies. This behavior is expected for inductors. For both plots, the fit is near perfect around the characteristic frequency.
 
 
 
@@ -67,7 +67,7 @@ To extract Bode plot information from a square wave, the period should be roughl
 
 \section{Fourier series analysis on oscilloscope}
 
-In Problem Set 3, we computed the Fourier Series of a square wave, seen in Eq~\eqref{square}.
+In Problem Set 3, we computed the Fourier Series of a square wave, seen in Eq~(1).
 \begin{equation}
     \label{square}
     \sum_{n=0}^{\infty}\frac{2(1-1(-1)^{n})}{n\pi}\,sin(n\omega t) = \begin{cases}
@@ -79,13 +79,13 @@ In Problem Set 3, we computed the Fourier Series of a square wave, seen in Eq~\e
 \end{cases}
 \end{equation}
 
-To test this result experimentally, we sent a \qty{400}{\hertz} square wave input signal into our RL circuit and computed the FFT with our oscilloscope. The FFT shows the fundamental frequency and its harmonics, with higher harmonics progressively attenuated by the low-pass filter. The experimental Fourier coefficients at each odd harmonic match the theoretical values from Eq~\eqref{square} to within $1\%$, confirming the Fourier series prediction.
+To test this result experimentally, we sent a \qty{400}{\hertz} square wave input signal into our RL circuit and computed the FFT with our oscilloscope. The FFT shows the fundamental frequency and its harmonics, with higher harmonics progressively attenuated by the low-pass filter. The experimental Fourier coefficients at each odd harmonic match the theoretical values from Eq~(1) to within $1\%$, confirming the Fourier series prediction.
 
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{output/fft_low_pass_400Hz.png}
-    \caption{FFT analysis of low-pass filter output with \qty{400}{\hertz} square wave input, with theoretical Fourier Series coefficients ( Eq~\eqref{square}) in red. Only integer harmonics have theoretical values, but they line up perfectly with the experiment. }
+    \caption{FFT analysis of low-pass filter output with \qty{400}{\hertz} square wave input, with theoretical Fourier Series coefficients (Eq~1) in red. Only integer harmonics have theoretical values, but they line up perfectly with the experiment. }
     \label{fig:fft_400Hz}
 \end{figure}
 
@@ -104,16 +104,15 @@ In Problem Set 3, we modeled a pulse wave with a function $f(t)$.
 \end{equation}
 %
 
-We computed the Fourier transform of Eq~\eqref{pulse} to be a $sinc$ function. 
+We computed the Fourier transform of Eq~(2) to be a $sinc$ function. 
 
 \begin{equation}
     F(\omega) = \frac{\sin(\omega\, T/2)}{\omega\sqrt{2\pi}}
 \end{equation}
 %
-To confirm this result experimentally, we sent a pulse wave into our RL circuit and took an FFT on our oscilloscope. We adjusted the frequency to \qty{200}{\hertz} so that only one pulse was visible on our oscilloscope, so that we can approximate it with Eq~\eqref{pulse}. 
+To confirm this result experimentally, we sent a pulse wave into our RL circuit and took an FFT on our oscilloscope. The pulse width was set to approximately half the circuit time constant ($\sim\qty{10}{\micro\second}$), and both channels were AC-coupled to suppress the large DC component of the Fourier spectrum. We adjusted the frequency to \qty{200}{\hertz} so that only one pulse was visible on our oscilloscope, allowing us to approximate it with Eq~(2). The input FFT (Figure~5) shows approximately five lobes of the expected sinc function, with the first zero above the circuit characteristic frequency.
 
-
-We then easily extracted the Bode plot in LabView without needing to sweep a function generator across many frequencies. Figure~\ref{fig:bode_pulse} shows the result. The experimental cutoff frequency is $f_{c,\mathrm{exp}} = \qty{7.57}{\kilo\hertz}$, compared to the theoretical $f_{c,\mathrm{th}} = \qty{7.96}{\kilo\hertz}$, a percent difference of $4.9\%$. The manual frequency sweep in Section~2 yielded $f_{c,\mathrm{exp}} = \qty{7.5}{\kilo\hertz}$, a $5.8\%$ difference. It makes sense that the manual sweep was less accurate, because of natual human error during measurement. The pulse method is also much faster. The bode plot from LabView does become less accurate at higher frequencies due to FFT resolution limits, but around the characteristic frequency, it produces very accurate values.
+We then easily extracted the Bode plot in LabView without needing to sweep a function generator across many frequencies. No noise threshold was necessary, because the data was already very clean. Figure~6 shows the result. The experimental cutoff frequency is $f_{c,\mathrm{exp}} = \qty{7.57}{\kilo\hertz}$, compared to the theoretical $f_{c,\mathrm{th}} = \qty{7.96}{\kilo\hertz}$, a percent difference of $5\%$. The manual frequency sweep in Section~2 yielded $f_{c,\mathrm{exp}} = \qty{7.5}{\kilo\hertz}$, also a $5\%$ difference. Both methods have similar accuracy, but the pulse method much faster, and the two methods give nearly the same value. The bode plot from LabView does become less accurate at higher frequencies due to FFT resolution limits, but around the characteristic frequency, it produces excellent values.
 
 
 \begin{figure}[H]
