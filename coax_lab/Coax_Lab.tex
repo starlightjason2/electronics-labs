@@ -1,0 +1,82 @@
+\documentclass[11pt,twocolumn]{article}
+\usepackage[margin=0.75in]{geometry}
+\usepackage{graphicx}
+\usepackage{siunitx}
+\usepackage{amsmath}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{booktabs}
+\usepackage{circuitikz}
+\usepackage{url}
+
+
+\title{Exploring Response of Series RLC circuits }
+\author{Jason Jain, Colby Hutchinson \\
+        Oregon State University, Department of Physics \\
+        Electronics Laboratory}
+\date{\today}
+
+\graphicspath{{output/}}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+  
+\end{abstract}
+
+\section{Introduction}\label{sec:introduction}
+
+
+
+\section{Theory}\label{sec:theory}
+
+
+\section{Results}\label{sec:results}
+
+\begin{table}[H]
+\centering
+\caption{Coaxial cable reflection and transmission coefficients for various termination resistances. $R$ and $T$ are the reflection and transmission coefficients, respectively. The last row corresponds to an open circuit ($R_{\text{term}}\to\infty$).}
+\label{tab:data}
+\small
+\begin{tabular}{
+  S[table-format=3.1]
+  S[table-format=1.2]
+  S[table-format=1.3]
+  S[table-format=-1.3]
+  S[table-format=-1.3]
+  S[table-format=1.3]
+}
+\toprule
+{$R_{\text{term}}$ (\unit{\ohm})} & {$V_{\text{in}}$ (\unit{V})} & {$V_{\text{term}}$ (\unit{V})} & {$V_{\text{ref}}$ (\unit{V})} & {$R = V_{\text{ref}}/V_{\text{in}}$} & {$T = V_{\text{term}}/V_{\text{in}}$} \\
+\midrule
+  20.0 & 1.48 & 0.672 & -0.660 & -0.446 & 0.454 \\
+  29.8 & 1.50 & 0.880 & -0.352 & -0.235 & 0.587 \\
+  50.3 & 1.48 & 1.240 & -0.018 & -0.012 & 0.838 \\
+  74.5 & 1.50 & 1.500 &  0.108 &  0.072 & 1.000 \\
+ 118.4 & 1.50 & 1.820 &  0.260 &  0.173 & 1.213 \\
+ 148.0 & 1.40 & 1.940 &  0.320 &  0.229 & 1.386 \\
+ {$\infty$} & 1.54 & 2.680 &  0.660 &  0.429 & 1.740 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+
+
+
+\section{Conclusions}\label{sec:conclusions}
+
+\begin{thebibliography}{9}
+\bibitem{gingrich}
+D. M. Gingrich, \textit{Practical Electronics}, Chapter 2: Driven RLC Circuits.
+\url{https://www-f9.ijs.si/~gregor/ElektronikaVaje/ElectronicsLectures_GinGrich.pdf}
+
+\bibitem{copilot}
+GitHub Copilot, AI-powered code completion tool by GitHub.
+Used for assistance with Python code development and LaTeX formatting.
+\url{https://github.com/features/copilot}
+\end{thebibliography}
+
+\end{document}
