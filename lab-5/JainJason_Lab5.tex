@@ -5,6 +5,7 @@
 \usepackage{amsmath}
 \usepackage{float}
 \usepackage{caption}
+\usepackage{circuitikz}
 
 \title{Lab 5: Op-Amps I}
 \author{Jason Jain \\
@@ -74,6 +75,35 @@ We build Circuit~\ref{fig:circuit} and record voltage across the diode as a func
     \caption{Closed-loop op-amp circuit for linearizing a diode.}
     \label{fig:circuit}
 \end{figure}
+
+
+\begin{figure}[H]
+    \centering
+    
+  \begin{circuitikz}[american]
+  \draw (0,0) node[op amp, noinv input up] (opamp) {}
+    (opamp.+) node[left] {}
+    (opamp.-) node[left] {};
+  \draw (opamp.out)
+     to[short] ++(1,0) node[npn, anchor=B] (Q) {$Q$};
+  \draw (Q.C) 
+    to[short] ++(0,0.5) node[vcc]{+5V};
+  \draw (Q.E) 
+    to[led] ++(0,-1) coordinate (ledmid) 
+    to[short] ++(0,-0.5) 
+    to[R] ++(0,-1) node[ground]{};
+  \draw (opamp.-) 
+    to[short] ++(0,-1.5) -| (ledmid);
+  \draw (-2,1.5) node[]{} 
+    to[pR, *-] ++(0,-2) node[ground]{};
+  \draw (-3,1.5) node[vcc]{+5V} 
+    to[R, *-*] ++(0,-2) 
+    to[R, *-] ++(0,-2.5) node[ground]{};
+  \end{circuitikz}
+\caption{The circuit we analyze in this lab consists of resistor $R$, inductor $L$, and capacitor $C$ in series with external voltage $V_E$.}
+\label{fig:circuit}
+\end{figure}
+
 
 
 
