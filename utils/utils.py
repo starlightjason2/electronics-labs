@@ -134,7 +134,7 @@ def plot_oscilloscope_data(
     plt.legend(loc="lower right")
     plt.grid(True, alpha=0.3)
     output_dir.mkdir(exist_ok=True)
-    plt.savefig(output_dir / f"{file_out}.png", dpi=150)
+    plt.savefig(output_dir / f"{file_out}.png", dpi=600)
 
 
 def find_closest_index(series: pd.Series[float], target_value: float) -> int:
@@ -523,5 +523,5 @@ def create_bode_and_phase_plot(
     ax_phase.legend(fontsize=8)
 
     fig.tight_layout()
-    fig.savefig(output_dir / f"{filter_type}_pass_bode_and_phase.png", dpi=150)
+    fig.savefig(output_dir / f"{filter_type}_pass_bode_and_phase.png", dpi=600)
     plt.close(fig)

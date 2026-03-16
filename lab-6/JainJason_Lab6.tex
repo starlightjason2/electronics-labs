@@ -1,0 +1,116 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{siunitx}
+\usepackage{amsmath}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{circuitikz}
+\usepackage{hyperref}
+
+\title{Lab 6: [Title]}
+\author{Jason Jain \\
+        Oregon State University, Department of Physics \\
+        Electronics Laboratory}
+\date{\today}
+
+\graphicspath{{output/}{./}{./output/}{lab-6/output/}{data/}}
+
+\begin{document}
+
+\maketitle
+
+
+\begin{abstract}
+
+\end{abstract}
+
+
+\section{Introduction/Background}
+
+ [What you are studying; what you will measure; what you can learn. Broad concepts first, then narrow to specific phenomena.]
+
+\section{Theory / Circuit Diagrams / Experimental Procedure}
+
+\subsection{Theory}
+[Theoretical models and relevant equations.]
+
+
+\begin{figure}[H]
+        \centering
+        \begin{circuitikz}[american]
+                \draw (0,0) node[op amp] (opamp) {}
+                (opamp.+) node[left] {}
+                (opamp.-) node[left] {};
+                \draw (opamp.out)
+                to[short, -*] ++(0.5,0) coordinate(out1)
+                to[short, -*] ++(1,0) coordinate(out2);
+                \draw (out2)
+                to[led] ++(0,-2) coordinate (led)
+                to[R, l=$\qty{100}{\ohm}$] ++(0,-1.5) node[ground]{};
+                \draw (out2)
+                to[loudspeaker] ++(0,2) node[ground, rotate=180]{};
+
+                % loop back
+                \draw (opamp.+)
+                to[short, -] (-1.5, -0.5) |- (-1.5, -2) coordinate(o_plus1)
+                to[R, l=$\qty{10}{\kilo\ohm}$, *-] +(3, 0) -| (out1);
+                \draw (o_plus1)
+                to[R, l=$\qty{10}{\kilo\ohm}$, *-] ++(-2.5, 0) -| (-5,-3);
+
+                % potentiometer
+                \draw (1,2) coordinate (p_start)
+                to[pR, l_=$\qty{10}{\kilo\ohm}$, name=P, *-*] (-1.5,2) coordinate (p_end);
+                \draw (P.wiper) to[short]  ++(1, 0) -| (out1);
+                \draw (opamp.-)
+                to[short, -] (-1.5, 0.5) |- (p_end)
+                to[C, l=$\qty{100}{\micro\farad}$] (-4,2)
+                to[short, -*] (-5,2) coordinate (tp);
+                \node[above left] at (tp) {TP (2V)};
+
+                % voltage divider 
+                \draw (-7,-3) node[vcc]{+5V}
+                to[R, l_=$\qty{330}{\ohm}$, -*] (-5,-3) coordinate(v_divider)
+                to[R, l_=$\qty{220}{\ohm}$, *-] ++(2,0) node[ground]{};
+                \draw (v_divider) to[short] (tp);
+        \end{circuitikz}
+        \caption{A square wave function generator circuit.}
+        \label{fig:circuit}
+\end{figure}
+
+\subsection{Experimental procedure}
+[Measuring techniques and experimental design.]
+
+\section{Results / Data / Graphs}
+
+\subsection{Presentation of results}
+
+
+\begin{figure}[H]
+        \centering
+        \includegraphics[width=\columnwidth]{output/oscillator_75nF_3.2kOhm.png}
+        \caption{Oscillator traces: $C = \qty{75}{\nano\farad}$, $R = \qty{3.2}{\kilo\ohm}$.}
+        \label{fig:osc_75nF}
+\end{figure}
+
+
+
+
+\begin{figure}[H]
+        \centering
+        \includegraphics[width=\columnwidth]{output/oscillator_9.3microF_3.2kOhm.png}
+        \caption{Oscillator traces: $C = \qty{9.3}{\micro\farad}$, $R = \qty{3.2}{\kilo\ohm}$.}
+        \label{fig:osc_9uF}
+\end{figure}
+
+\subsection{Comparison with theory}
+[Theory curves on data plots where appropriate; points for data, lines for theory.]
+
+\subsection{Error analysis}
+[Any error analysis performed.]
+
+\section{Conclusions / Discussion}
+
+ [What you learned; unexpected results; general circuit behavior; comparison with theory; key concepts.]
+
+\end{document}

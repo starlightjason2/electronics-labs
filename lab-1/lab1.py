@@ -29,7 +29,7 @@ ax.set_xlabel("Current (mA)")
 ax.set_ylabel("Voltage (V)")
 ax.grid(True, alpha=0.3)
 paths.output_dir.mkdir(exist_ok=True)
-plt.savefig(paths.output_dir / "resistor_current_vs_voltage.png", dpi=150)
+plt.savefig(paths.output_dir / "resistor_current_vs_voltage.png", dpi=600)
 plt.close()
 
 # LEDs
@@ -57,7 +57,7 @@ ax.set_xlabel("Current (A)")
 ax.set_ylabel("Voltage (V)")
 ax.legend()
 ax.grid(True, alpha=0.3)
-plt.savefig(paths.output_dir / "led_current_vs_voltage.png", dpi=150)
+plt.savefig(paths.output_dir / "led_current_vs_voltage.png", dpi=600)
 plt.close()
 
 # Voltage divider
@@ -65,12 +65,17 @@ fig, ax = plt.subplots()
 vd_df = df[["Voltage Divider R", "Voltage Divider V"]].dropna()
 ax.scatter(vd_df["Voltage Divider R"], vd_df["Voltage Divider V"])
 x_fit = np.linspace(0, 10000, 100)
-ax.plot(x_fit, voltage_divider_fit(x_fit, 100, 100, 5), "-", label="Theoretical Voltage $V_L$")
+ax.plot(
+    x_fit,
+    voltage_divider_fit(x_fit, 100, 100, 5),
+    "-",
+    label="Theoretical Voltage $V_L$",
+)
 ax.set_xlabel("Resistance (Ω)")
 ax.set_ylabel("Voltage (V)")
 ax.legend()
 ax.grid(True, alpha=0.3)
-plt.savefig(paths.output_dir / "voltage_divider.png", dpi=150)
+plt.savefig(paths.output_dir / "voltage_divider.png", dpi=600)
 plt.close()
 
 # Total Resistance
@@ -78,10 +83,12 @@ fig, ax = plt.subplots()
 tr_df = df[["Total Resistance V", "Total Resistance I"]].dropna()
 ax.scatter(tr_df["Total Resistance V"], tr_df["Total Resistance I"])
 popt, _ = curve_fit(line_func, tr_df["Total Resistance V"], tr_df["Total Resistance I"])
-x_fit = np.linspace(tr_df["Total Resistance V"].min(), tr_df["Total Resistance V"].max(), 100)
+x_fit = np.linspace(
+    tr_df["Total Resistance V"].min(), tr_df["Total Resistance V"].max(), 100
+)
 ax.plot(x_fit, line_func(x_fit, *popt), "--")
 ax.set_xlabel("Voltage (V)")
 ax.set_ylabel("Current (mA)")
 ax.grid(True, alpha=0.3)
-plt.savefig(paths.output_dir / "total_resistance.png", dpi=150)
+plt.savefig(paths.output_dir / "total_resistance.png", dpi=600)
 plt.close()

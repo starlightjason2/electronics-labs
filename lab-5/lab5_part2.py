@@ -55,4 +55,4 @@ ax2.grid(True, alpha=0.3)
 
 fig.tight_layout()
 paths.output_dir.mkdir(exist_ok=True)
-fig.savefig(paths.output_dir / "part2.png", dpi=150)
+fig.savefig(paths.output_dir / "part2.png", dpi=600)

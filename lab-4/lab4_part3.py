@@ -69,4 +69,4 @@ ax2.scatter(
 ax2.legend(loc="upper right")
 
 fig.tight_layout()
-fig.savefig(paths.output_dir / f"fft_low_pass_400Hz.png", dpi=150)
+fig.savefig(paths.output_dir / f"fft_low_pass_400Hz.png", dpi=600)

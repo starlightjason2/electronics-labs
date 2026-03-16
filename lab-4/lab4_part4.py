@@ -87,7 +87,7 @@ ax2.grid(True, alpha=0.3)
 ax2.legend()
 
 fig.tight_layout()
-fig.savefig(paths.output_dir / "fft_low_pass_200Hz.png", dpi=150)
+fig.savefig(paths.output_dir / "fft_low_pass_200Hz.png", dpi=600)
 plt.close()
 
 # --- Bode plot from pulse response ---
@@ -128,5 +128,5 @@ ax3.set_ylabel("Gain (dB)")
 ax3.grid(True, which="both", alpha=0.3)
 ax3.legend(fontsize=8)
 fig2.tight_layout()
-fig2.savefig(paths.output_dir / "bode_pulse_response.png", dpi=150)
+fig2.savefig(paths.output_dir / "bode_pulse_response.png", dpi=600)
 plt.close()

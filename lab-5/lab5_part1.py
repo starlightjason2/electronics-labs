@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.lines import Line2D
 import pandas as pd
 from scipy.optimize import curve_fit
 
@@ -26,12 +27,12 @@ ax.plot(
         {"m": m, "b": (b, "V")},
     ),
 )
-ax.set_xlabel("v_+ (V)")
-ax.set_ylabel("v_- (V)")
+ax.set_xlabel("$V_+$ (V)")
+ax.set_ylabel("$V_-$ (V)")
 ax.grid(True, alpha=0.3)
 ax.legend()
 plt.tight_layout()
-plt.savefig(paths.output_dir / "part1b.png", dpi=300)
+plt.savefig(paths.output_dir / "part1b.png", dpi=600)
 plt.close()
 
 # Noninverting op-amp oscilloscope traces
@@ -50,15 +51,72 @@ for ax, (fname, title) in zip(axes.flat, opamp_files):
     t_in, v_in, t_out, v_out = cols[0], cols[1], cols[2], cols[3]
 
     # convert time to μs
-    scale = 1e6
-    ax.plot(df[t_in] * scale, df[v_in], label="$V_{\\mathrm{in}}$", color="goldenrod")
-    ax.plot(df[t_out] * scale, df[v_out], label="$V_{\\mathrm{out}}$", color="blue")
+    time_scale = 1e6
+    volt_scale = 1e3
+
+    df[v_out] = df[v_out] * volt_scale
+    df[v_in] = df[v_in] * volt_scale
+    df[t_in] = df[t_in] * time_scale
+    df[t_out] = df[t_out] * time_scale
+
+    ax.plot(
+        df[t_in],
+        df[v_in],
+        label="$V_{\\mathrm{in}}$",
+        color="goldenrod",
+    )
+    ax.plot(
+        df[t_out],
+        df[v_out],
+        label="$V_{\\mathrm{out}}$",
+        color="blue",
+    )
+
+    # dashed horizontal lines at amplitude (positive peak) of each signal
+    amp_in = (df[v_in].max() - df[v_in].min()) / 2
+    amp_out = (df[v_out].max() - df[v_out].min()) / 2
+    center_in = (df[v_in].max() + df[v_in].min()) / 2
+    center_out = (df[v_out].max() + df[v_out].min()) / 2
+    gain = amp_out / amp_in
+    ax.axhline(
+        center_in + amp_in,
+        color="goldenrod",
+        linestyle="--",
+        label="$A_{\\mathrm{in}}$ =" + f" $\\pm${(amp_in):.0f} mV",
+    )
+    ax.axhline(
+        center_in - amp_in,
+        color="goldenrod",
+        linestyle="--",
+    )
+
+    ax.axhline(
+        center_out + amp_out,
+        color="blue",
+        linestyle="--",
+        label="$A_{\\mathrm{out}}$ =" + f" $\\pm${(amp_out):.0f} mV",
+    )
+    ax.axhline(
+        center_out - amp_out,
+        color="blue",
+        linestyle="--",
+    )
+
     ax.set_title(title)
     ax.set_xlabel("Time (μs)")
     ax.set_ylabel("Voltage (V)")
-    ax.legend(fontsize=8)
+    handles, labels = ax.get_legend_handles_labels()
+    handles.append(Line2D([0], [0], visible=False))
+    labels.append(f"$G = {gain:.2f}$")
+    ax.legend(
+        handles,
+        labels,
+        fontsize=8,
+        loc="lower right",
+        framealpha=1,
+    )
     ax.grid(True, alpha=0.3)
 
 fig.tight_layout()
-fig.savefig(paths.output_dir / "noninverting_opamp.png", dpi=150)
+fig.savefig(paths.output_dir / "noninverting_opamp.png", dpi=600)
 plt.close()

@@ -6,6 +6,7 @@
 \usepackage{float}
 \usepackage{caption}
 \usepackage{circuitikz}
+\usepackage{hyperref}
 
 \title{Lab 5: Op-Amps I}
 \author{Jason Jain \\
@@ -23,95 +24,121 @@
 
 \subsection{Open-loop gain}
 
-We set up an open-loop op-amp circuit. Table~\ref{tab:part1a} shows the measured voltages. At the critical positive voltage $V_+ = \qty{1.33}{\volt}$, the negative voltage jumps up from $V_- = \qty{0.7}{\volt}$ to $V_-=\qty{2}{\volt}$.
-
 \begin{table}[H]
-    \centering
-    \begin{tabular}{cc}
-        \hline
-        $V_+$ (\unit{\volt}) & $V_-$ (\unit{\volt}) \\
-        \hline
-        0.5 & 0.7 \\
-        1.3 & 0.7 \\
-        1.33 & 2.0 \\
-        3.3 & 2.0 \\
-        \hline
-    \end{tabular}
-    \caption{Open-loop gain measurements.}
-    \label{tab:part1a}
+  \centering
+  \begin{tabular}{cc}
+    \hline
+    $V_\mathrm{in}$ (\unit{\volt}) & $V_\mathrm{out}$ (\unit{\volt}) \\
+    \hline
+    0.5                            & 0.001                           \\
+    1.0                            & 0.002                           \\
+    1.5                            & 0.003                           \\
+    2.0                            & 0.005                           \\
+    2.03                           & 0.006                           \\
+    2.05                           & 3.77                            \\
+    2.1                            & 3.78                            \\
+    2.5                            & 3.78                            \\
+    3.0                            & 3.78                            \\
+    4.0                            & 3.78                            \\
+    5.0                            & 3.78                            \\
+    \hline
+  \end{tabular}
+  \caption{$V_\mathrm{out}$ (pin 1) vs $V_\mathrm{in}$ (pin 3).}
+  \label{tab:part1a}
 \end{table}
+
+
+We set up an open-loop op-amp circuit (Ref.~\ref{ref:lm358}). Table~\ref{tab:part1a} shows the measured voltages. At the critical voltage $V_+=V_\mathrm{in} = \qty{2.05}{\volt}$, the output jumps up from $\qty{0.006}{\volt}$ to $\qty{3.77}{\volt}$, demonstrating comparator behavior. Row 6 captures the moment the op-amp responds near instantaneously. The open-loop gain is then,
+$$
+  G_0 = \frac{V_\mathrm{out}}{V_+ - V_-} = \frac{3.77}{0.02} \approx 188
+$$
+where the differential input at turn-on is $V_+ - V_- = 2.05 - 2.03 = \qty{0.02}{\volt}$. This is far below the datasheet open-loop voltage of $\approx\qty{140}{V/mV}$ (Ref.~\ref{ref:lm358}). However, since the potentiometer is dialed by hand, the value for differential voltage can only be so small, constraining the final calculation.
+
 
 \subsection{Follower}
 
-Figure~\ref{fig:part1b} shows the follower configuration data with a linear fit. The unity-gain buffer matches $v_-$ to $v_+$. The fitted slope is $m = 1.003$, a $0.3\%$ difference from the theoretical value of $m = 1$, confirming near-ideal unity-gain behavior.
 
 \begin{figure}[H]
-    \centering
-    \includegraphics[width=0.5\textwidth]{output/part1b.png}
-    \caption{Follower configuration: $v_-$ vs $v_+$ with linear fit.}
-    \label{fig:part1b}
+  \centering
+  \includegraphics[width=0.5\textwidth]{output/part1b.png}
+  \caption{Follower configuration: $v_-$ vs $v_+$ with linear fit.}
+  \label{fig:part1b}
 \end{figure}
+
+Figure~\ref{fig:part1b} shows the follower configuration data with a linear fit. This confirms the Golden Rules (Ref.~\ref{ref:lm358}), which tell us that $V_+$ and $V_-$ should always be equal. The fitted slope is $m = 1.003$, only a $0.3\%$ difference from the theoretical value of $m = 1$.
+
 
 \subsection{Non-inverting}
 
-Figure~\ref{fig:noninverting_opamp} shows the non-inverting amplifier response at different frequencies and input amplitudes. The output amplitude scales with the gain set by the feedback resistors.
-
 \begin{figure}[H]
-    \centering
-    \includegraphics[width=0.95\textwidth]{output/noninverting_opamp.png}
-    \caption{Non-inverting op-amp response at various frequencies and input amplitudes.}
-    \label{fig:noninverting_opamp}
-\end{figure}
-
-\newpage
-
-\section{Part 2}
-
-We build Circuit~\ref{fig:circuit} and record voltage across the diode as a function of current (Figure~\ref{fig:part2}). The fitted slope $m = \qty{-0.109}{\volt\per\milli\ampere}$ corresponds to a feedback resistance of $R_f = |1/m| = \qty{9.2}{\kilo\ohm}$, a $8\%$ difference from the nominal $\qty{10}{\kilo\ohm}$ potentiometer. The op-amp linearizes the diode's logarithmic $I$--$V$ characteristic into a linear relationship. 
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.5\textwidth]{output/part2-circuit.png}
-    \caption{Closed-loop op-amp circuit for linearizing a diode.}
-    \label{fig:circuit}
+  \centering
+  \includegraphics[width=0.95\textwidth]{output/noninverting_opamp.png}
+  \caption{Non-inverting op-amp response at various frequencies and input amplitudes. We see an experimental gain varying from 2.79-2.94, a 2-8\% percent difference from the theoretical $G=3$}
+  \label{fig:noninverting_opamp}
 \end{figure}
 
 
+Figure~\ref{fig:noninverting_opamp} shows the non-inverting amplifier response at different frequencies and input amplitudes. The output amplitude scales with the gain set by the resistors, where we know the non-inverting gain is given by Eq~\eqref{fig:noninverting_opamp} where for our circuit, $R_1=\qty{1}{\kilo\ohm}$ and $R_2=\qty{2}{\kilo\ohm}$.
+
+
+\begin{equation}
+  \label{non_invert}
+  G=1+ \frac{R_2}{R_1}=3
+\end{equation}
+
+For a variety of amplitudes and frequencies, we see an experimental gain close to $3$, as predicted by theory.
+
+
+
+
+\section{Linearizing a Diode}
+
 \begin{figure}[H]
-    \centering
-    
+  \centering
   \begin{circuitikz}[american]
-  \draw (0,0) node[op amp, noinv input up] (opamp) {}
-    (opamp.+) node[left] {}
-    (opamp.-) node[left] {};
-  \draw (opamp.out)
-     to[short] ++(1,0) node[npn, anchor=B] (Q) {$Q$};
-  \draw (Q.C) 
+    \draw (0,0) node[op amp] (opamp) {}
+    (opamp.-) node[left] {}
+    (opamp.+) node[left] {};
+    \draw (opamp.out)
+    to[short] ++(1,0) node[npn, anchor=B] (transistor) {2N222};
+    \draw (transistor.C)
     to[short] ++(0,0.5) node[vcc]{+5V};
-  \draw (Q.E) 
-    to[led] ++(0,-1) coordinate (ledmid) 
-    to[short] ++(0,-0.5) 
-    to[R] ++(0,-1) node[ground]{};
-  \draw (opamp.-) 
-    to[short] ++(0,-1.5) -| (ledmid);
-  \draw (-2,1.5) node[]{} 
-    to[pR, *-] ++(0,-2) node[ground]{};
-  \draw (-3,1.5) node[vcc]{+5V} 
-    to[R, *-*] ++(0,-2) 
-    to[R, *-] ++(0,-2.5) node[ground]{};
+    \draw (transistor.E)
+    to[led] ++(0,-1) coordinate (ledmid)
+    to[short] ++(0,-0.5)
+    to[R, l=$\qty{100}{\ohm}$] ++(0,-1.5) node[ground]{};
+    \draw (opamp.-)
+    to[short, -] ++(0,-1.5) -| (ledmid);
+    \draw (-3.5,1.5) coordinate (pr_start)
+    to[pR, l_=$\qty{10}{\kilo\ohm}$, name=P, *-] ++(0,-2) node[ground]{};
+    \draw (P.wiper) to[short] (opamp.+);
+    \draw (-5.5,1.5) node[vcc]{+5V}
+    to[R, l_=$\qty{330}{\ohm}$, -*] ++(0,-2) coordinate(v_divider)
+    to[R, l_=$\qty{220}{\ohm}$, *-] ++(0,-2) node[ground]{};
+    \draw (v_divider)
+    to[short] (-5,-0.5) |- (-3.5,1.5);
   \end{circuitikz}
-\caption{The circuit we analyze in this lab consists of resistor $R$, inductor $L$, and capacitor $C$ in series with external voltage $V_E$.}
-\label{fig:circuit}
+  \caption{We use an op-amp to linearize a diode.}
+  \label{fig:circuit}
 \end{figure}
 
 
 
 
 \begin{figure}[H]
-    \centering
-    \includegraphics[width=0.95\textwidth]{output/part2.png}
-    \caption{Non‑inverting amplifier (left) and diode characteristic (right). The op-amp turned a non-ohmic circuit element with a logarithmic voltage relationship, into an ohmic component with a linear voltage relationship.}
-    \label{fig:part2}
+  \centering
+  \includegraphics[width=0.85\textwidth]{output/part2.png}
+  \caption{Diode voltage vs current for a non‑inverting amplifier (left) and basic circuit (right). We see a linear (Ohmic) relationship for our circuit on the left, vs the logarithmic relationship from Lab 1 on the right.}
+  \label{fig:part2}
 \end{figure}
+
+In Circuit~\ref{fig:circuit}, we linearize an LED with a closed-loop op-amp~\ref{ref:lm358} and a transistor. The non-inverting (+) input is connected to a potentiometer, allowing us to test voltage output at a variety of loads resistances. The potentiometer is connected to a voltage divider, which outputs a constant $\qty{5}{\volt} \times 220 / (220 + 330) = \qty{2}{\volt}$, which means $V_+$ is linearly dependent on the potentiometer up to $\qty{2}{V}$. The inverting input $V_-$ is connected to a point after the diode. The op-amp is following the Golden Rules and trying to keep these two input voltages equal, which forces $V_-$ into a linear relationship with current.
+
+The op-amp would normally output a typical current $\approx\qty{20}{\milli\ampere}$ (Ref.~\ref{ref:lm358}), which is not enough to power our LED. The transistor (2N222) amplifies the op-amp's output current by around $\times130$ (measured in Lab 2), which is enough to light up the LED. In this case, the extra current comes from the base $\qty{+5}{\volt}$ going to the transistor's collector. Since $V_-=V_\mathrm{out}$, the op-amp forces the amplified output into the Ohmic relationship exhibited by the potentiometer. By dialing the potentiometer, we have a good tunable current source for the LED.
+
+\section{References}
+\begin{enumerate}
+  \item \label{ref:lm358} Texas Instruments, ``LM158, LM258, LM358, LM2904 Dual Operational Amplifiers,'' Datasheet, Oct.\ 2024. [Online]. Available: \url{https://www.ti.com/lit/ds/symlink/lm358.pdf}
+\end{enumerate}
 
 \end{document}
