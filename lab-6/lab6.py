@@ -40,40 +40,33 @@ def load_oscillator_csv(path):
     return df.dropna(how="all")
 
 
-def estimate_period_s(df, channel="v_out"):
-    """Estimate oscillation period (s) from peak spacing."""
-    v = df[channel].to_numpy()
-    t = df["t_out"].to_numpy()
-    peaks, _ = find_peaks(v, height=(v.max() + v.min()) / 2, distance=5)
-    if len(peaks) < 2:
-        return None
-    periods = np.diff(t[peaks])
-    return float(np.median(periods))
-
-
-def plot_traces(df, title_suffix, tau_s, out_path):
+def plot_traces(df, out_path):
     """Plot output and probe voltage vs time in side-by-side subplots.
 
     tau_s = R*C for reference.
     """
     fig, (ax_out, ax_probe) = plt.subplots(1, 2, figsize=(10, 4), sharex=True)
 
-    t_out_us = df["t_out"].to_numpy() * 1e6  # s -> μs
-    t_probe_us = df["t_probe"].to_numpy() * 1e6
+    # s -> ms
+    t_out_us = df["t_out"].to_numpy() * 1e3
+    t_probe_us = df["t_probe"].to_numpy() * 1e3
 
     # Left: output node
-    ax_out.plot(t_out_us, df["v_out"], color="C0")
-    ax_out.set_xlabel("Time (μs)")
+    ax_out.plot(t_out_us, df["v_out"], color="C0", label=f"Op-amp Output")
+    ax_out.set_xlabel("Time (ms)")
     ax_out.set_ylabel("Voltage (V)")
     ax_out.grid(True, alpha=0.3)
 
     # Right: probe / TP node
-    ax_probe.plot(t_probe_us, df["v_probe"], color="C1")
-    ax_probe.set_xlabel("Time (μs)")
+    ax_probe.plot(t_probe_us, df["v_probe"], label="Test Probe", color="C1")
+    ax_probe.set_xlabel("Time (ms)")
     ax_probe.grid(True, alpha=0.3)
 
-    fig.tight_layout(rect=(0, 0, 1, 0.92))
-    fig.savefig(out_path, dpi=150)
+    fig.legend(
+        loc="upper center", ncol=2, frameon=False
+    )  # Optional: removes the box border
+
+    fig.savefig(out_path, dpi=600)
     plt.close()
 
 
@@ -83,10 +76,10 @@ def main():
         if not filepath.exists():
             continue
         df = load_oscillator_csv(filepath)
-        tau_s = R_ohm * C_F
+
         label = fname.replace(".csv", "").replace("lab6_", "")
         out_name = f"oscillator_{label}.png"
-        plot_traces(df, label, tau_s, paths.output_dir / out_name)
+        plot_traces(df, paths.output_dir / out_name)
 
 
 if __name__ == "__main__":

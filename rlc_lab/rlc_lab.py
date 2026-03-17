@@ -52,9 +52,9 @@ def setup_omega_axis(ax: Axes, n_beta: int = 30) -> None:
     x_lo, x_hi = omega_0 - n_beta * beta, omega_0 + n_beta * beta
     ax.set_xlim(x_lo, x_hi)
     ax.xaxis.set_major_locator(
-        ticker.FixedLocator(np.arange(x_lo, x_hi + 1e-9, 10 * beta))
+        ticker.FixedLocator(np.arange(x_lo, x_hi + 1e-9, 10 * beta))  # type: ignore
     )
-    ax.xaxis.set_minor_locator(ticker.FixedLocator(np.arange(x_lo, x_hi + 1e-9, beta)))
+    ax.xaxis.set_minor_locator(ticker.FixedLocator(np.arange(x_lo, x_hi + 1e-9, beta)))  # type: ignore
     ax.tick_params(axis="x", which="major", length=7, width=1, color="black")
     ax.tick_params(
         axis="x", which="minor", length=4, width=1, color="gray", direction="inout"
