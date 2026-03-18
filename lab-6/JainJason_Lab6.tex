@@ -23,42 +23,36 @@
 
 
 \begin{abstract}
-        We construct a square wave function generator on a breadboard, using an LM358 op-amp, a capacitor, and a potentiometer; the circuit functions as an RC oscillator circuit converting DC to AC current. We discuss the physics of our circuit and develop a theoretical model for calculating output frequency from the time constant $\tau=RC$. We test our model by measuring a period of $\qty{1}{\s}$ for $C=\qty{9.3}{\micro\farad}$, $R=\qty{3.2}{\kilo\ohm}$ by counting 10 LED blinks, and plot the square wave op-amp output and the capacitor charge/discharge cycle on a two-channel oscilloscope. Measured frequencies agree with theory to within $5\%$, supporting our model and providing a theoretical foundation for analyzing op-amps.
+        We construct a square wave function generator on a breadboard, using an LM358 op-amp, a capacitor, and a potentiometer; the circuit functions as an RC oscillator circuit converting DC to AC current. We discuss the physics of our circuit and develop a theoretical model for calculating output frequency from the time constant $\tau=RC$. For a capacitor with $C=\qty{100}{\micro\farad}$ and potentiometer at $R=\qty{3.2}{\kilo\ohm}$, we found a period of $\qty{0.325}{\s}$ with a stopwatch, matching our model's prediction within 8\%. We tested two more capacitors ($C=\qty{75}{\nano\farad}$ and $C=\qty{9.3}{\micro\farad}$) at the same resistance, plotting the square wave op-amp output and the capacitor charge/discharge cycle on a two-channel oscilloscope. The oscilloscope's measured frequencies agreed with theory to within $5\%$, supporting our model and providing a theoretical foundation for analyzing op-amps.
 \end{abstract}
 
 
 \section{Introduction}
 
-Op-amps are powerful and fundamental electrical components used widely in modern technology. To explore the applications of op-amps, we build a simple RC oscillator circuit with an LM358 op-amp, capacitor, and variable resistance potentiometer. The op-amp will behave as a comparator and continuously charge/discharge the capacitor--by dialing the potentiometer, we can adjust the frequency of the square wave.
+Op-amps are powerful and fundamental electrical components used widely in modern technology. To explore the applications of op-amps, we build a simple RC oscillator circuit with an LM358 op-amp, capacitor, and variable resistance potentiometer. The op-amp will behave as a comparator and continuously charge/discharge the capacitor--by dialing the potentiometer or swapping the capacitor, we can adjust the frequency of the square wave.  The resulting circuit has applications across electronics for converting DC to AC current, and can even be used for generating sounds at audible frequencies.
 
 
 \section{Theory}
 
 
-The three crucial components of this circuit are the op-amp, capacitor, and voltage divider. An op-amp is a comparator and amplifier, taking two inputs and scaling the differential by a high gain factor, which sets the output voltage $V_\text{out}$.
+The three crucial components of this circuit are the op-amp, capacitor, and voltage divider, and we discuss the equations governing each. An op-amp is a comparator and amplifier, taking two inputs and scaling the differential by a high gain factor. This sets the output $V_\text{out}$ until some maximum saturation voltage $V_S$\cite{graham}. An ideal op-amp follows the Golden Rules, with zero input current $I_\text{in}=0$ and equal feedback voltages $V_{+}\approx  V_{-}$. We assume an ideal op-amp, although we will show that it takes some time for the voltages to equalize (equal to the half-period of oscillation). Next up is the capacitor, a device that stores charge; the equations for charge/discharge voltage are given total change $\Delta V$ for starting $V(0)=V_0$ are Eq~\eqref{cap_charge}. The capacitor time constant is defined as $\tau\equiv RC$\cite{graham}.
 
-\begin{equation}
-        \label{opamp}
-        V_\text{out} = G_0(V_+-V_-)
-\end{equation}
+\begin{align}
+        \label{cap_charge}
+        V(t) & =V_0+\Delta V\left(1-e^{-t/\tau}\right) \\
+        V(t) & =\Delta V\,e^{-t/\tau}
+\end{align}
 
-A capacitor is a device that stores charge. If while charging, the total change in voltage is $\Delta V$ and starting voltage is $V(0)=V_0$, then the voltage at time $t$ is found with
-
-\begin{equation}
-        \label{cap}
-        V\left(t\right)=V_0+\Delta V\left(1-e^{-\frac{t}{T}}\right)
-\end{equation}
-
-Given two resistors $R_1, \ R_2$, a voltage divider sets a threshold voltage, weighted by each resistance.
+Finally, given two resistors $R_1, \ R_2$, a voltage divider sets a threshold voltage weighted by each resistance\cite{graham}.
 
 
 \begin{equation}
         \label{eq:vdivider}
-        V_{\text{divider}} =   \frac{V_\mathrm{in} R_2}{R_1 + R_2}
+        \frac{V_{\text{divider}}}{V_\mathrm{in} } =   \frac{R_2}{R_1 + R_2}
 \end{equation}
 
 
-
+\subsection{Circuit Analysis}
 
 \begin{figure}[H]
         \centering
@@ -102,67 +96,69 @@ Given two resistors $R_1, \ R_2$, a voltage divider sets a threshold voltage, we
         \label{fig:circuit}
 \end{figure}
 
-Circuit~\ref{fig:circuit} takes input power $\qty{+5}{\volt}$ and feeds it into a voltage divider (lower left) with $R_1=\qty{220}{\ohm}, \ R_2=\qty{330}{\ohm}$, setting reference voltage $V_\text{ref}={(5) (220)} / {550}=\qty{2}{\volt}$ (measured at TP, top left).
+Circuit~\ref{fig:circuit} takes input power $\qty{+5}{\volt}$ and feeds it into a voltage divider (lower left) with $R_1=\qty{220}{\ohm}, \ R_2=\qty{330}{\ohm}$, setting reference voltage (measured at TP, top left).
 
-The positive feedback ($V_+$) is stabilized by another voltage divider with $R_1=R_2=\qty{10}{\kilo\ohm}$. Plugging into Eq\eqref{eq:vdivider}:
+\begin{equation}
+        \label{ref}
+        V_\text{ref}=\qty{5}{\volt}\left(\frac{ 220}{550}\right)=\qty{2}{\volt}
+\end{equation}
+
+The positive feedback ($V_+$) is stabilized by another voltage divider with $R_1=R_2=\qty{10}{\kilo\ohm}$. Plugging into Eq\eqref{eq:vdivider} for $V_\text{divider}=V_+$ and $V_\text{in}=V_+ + V_\text{ref}$  from Eq~\eqref{ref}:
 
 \begin{equation}
         \label{vplus}
-        V_+(t)  =   \frac{1}{2} V_\text{out}(t)
+        V_+(t)  =    \frac{ V_\text{ref} + V_\text{out}(t)}{2}
 \end{equation}
 
-The interesting physics happens in the negative feedback ($V_-$), connected to a capacitor-resistor circuit with exponential charge/discharge. When the capacitor drops below the critical threshold $V_-<V_+$, the amplified output from Eq~\eqref{opamp} will immediately create a positive voltage and force a charge cycle. Likewise, when the capacitor charges above $V_->V_+$, a negative voltage will force a discharge cycle. In either case, the op-amp will quickly reach  maximum saturation voltage $V_\text{out}=\pm V_S$, which will be the amplitude of our wave-form.
+The interesting physics happens in the negative feedback ($V_-$), connected to a capacitor-resistor circuit with exponential charge/discharge. When the capacitor drops below the critical threshold $V_-<V_+$, the output will immediately create a positive voltage and force a charge cycle. The op-amp will rapidly reach some saturation voltage $V_\text{out}=V_S$; for an ideal op-amp this switch happens instantaneously, so at any given moment $V_\text{out}=0$ at ground (forcing a discharge) or $V_\text{out}=V_S$ at saturation (forcing a charge). Because of the positive feedback loop, we assume $V_+$ likewise switched instantaneously. Substituting the constraints for $V_\text{out}$ into Eq~\eqref{vplus}, we see that $V_+$ is constrained by $V_\text{ref}/2 \leq V_+ \leq (V_\text{ref} + V_S) / 2$. Assuming a saturation voltage of our power output, $\qty{5}{\volt}$, we get $\qty{1}{\volt} \leq V_+ \leq \qty{3.5}{\volt}$.
 
-Solving $V_-=V_+$ at $V_\text{out}=V_S$ can give us the "flipping" time, which should be a half-period of the oscillation. By Eq~\eqref{vplus}, the positive feedback is constrained by $\pm V_+(t) = \pm V_S / 2$ at saturation. This must also be the negative feedback constraint, since the op-amp is working to equalize the two inputs. Let $t$ be the time for the capacitor to go from $V_-=-V_S / 2$ to $V_-=+V_S / 2$.
+The capacitor, however, takes time to charge/discharge. When $V_+$ flips to $\qty{1}{\volt}$, the capacitor remains stuck at $\qty{3.5}{\volt}$ and discharges towards ground until $V_-=V_+=\qty{1}{\volt}$; then $V_+$ flips to $\qty{3.5}{\volt}$, but the capacitor is still at $\qty{1}{\volt}$ and starts charging up to saturation until $V_-=V_+=\qty{3.5}{\volt}$. Using \eqref{cap_charge} $V_\text{ref}=\qty{2}{\volt}$ can give us the "flipping" time in each case. While discharging, $\Delta V = \qty{3.5}{\volt}$; while charging, $\Delta V = 5-1= \qty{4}{\volt}, \ V_0 = \qty{1}{\volt}$ (from the previous cycle).
 
 \begin{align*}
-        \frac{V_S }{2} & = -\frac{V_S}{2}+V_S(1-e^{(-t/ \tau)}) \\[0.5em]
-        \frac{1}{2}    & = 1-2e^{-t/\tau}
+        3.5 & =1+4\left(1-e^{-t_1/\tau}\right) \\
+        1   & =3.5\,e^{-t_2/\tau}
 \end{align*}
 
+Therefore, $-t_1\tau=\ln(1 - (2.5 / 4))=\ln(3 / 8)$ or $t_1=\tau\ln(8/3)$, and $-t_2\tau=\ln(1 / 3.5) = \ln(2/7)$ or $t_2=\tau\ln(7/2)$. The total period $T=t_1+t_2$ is then given by \eqref{period_th}
 
+\begin{equation}
+        \label{period_th}
+        T=\tau\left( \ln\left( \frac{8}{3} \right)+\ln\left( \frac{7}{2} \right) \right)\approx 2.2\tau
+\end{equation}
 
 \section{Experimental Procedure}
 
-We assembled Circuit~\ref{fig:circuit} on a breadboard (Figure~\ref{fig:breadboard}) and powered it with a \qty{+5}{\volt} DC supply. The potentiometer was set to $R = \qty{3.2}{\kilo\ohm}$ (measured with a multimeter). We tested two capacitor values: $C = \qty{75}{\nano\farad}$ and $C = \qty{9.3}{\micro\farad}$.
-
-For each configuration, we recorded the op-amp output (Pin 1) and the test probe (TP) waveforms on different channels of our oscilloscope. We also counted LED blinks and listened to the speaker output to qualitatively verify the oscillation frequency.
+We assembled Circuit~\ref{fig:circuit} on a breadboard (Figure~\ref{fig:breadboard}) and powered it with a \qty{+5}{\volt} DC supply. The potentiometer was kept at to $R = \qty{3.2}{\kilo\ohm}$, (measured with a multimeter).
 
 
-A photograph of the LED in operation is shown in Figure~\ref{fig:breadboard}.
-
-% PLACEHOLDER: replace with photo of LED on if available
 \begin{figure}[H]
         \centering
         \includegraphics[width=0.5\columnwidth]{data/circuit.jpg}
-        \caption{Breadboard implementation of Circuit~\ref{fig:circuit} with the LED illuminated during the high output phase.}
+        \caption{Breadboard implementation of Circuit~\ref{fig:circuit} with the LED illuminated during the high output phase, for $R = \qty{3.2}{\kilo\ohm}$ and $C = \qty{100}{\micro\farad}$.}
         \label{fig:breadboard}
 \end{figure}
 
 
-\section{Results and Discussion}
 
-\subsection{Oscilloscope traces}
+For our first experiment, we tested a capacitor with $C = \qty{100}{\micro\farad}$. We observed that the speaker was beeping in time with the LED as expected, and counted a total 10 LED blinks over $\qty{6.51}{\s}$, yielding an experimental half period $6.51 / 20 = \qty{0.3255 }{s}$. This is within 8\% accuracy of the theoretical prediction from Eq~\eqref{period}: $1.1(\qty{3.2}{\kilo\ohm})(\qty{100}{\micro\farad})=\qty{0.351}{\s}$.
 
-Figures~\ref{fig:osc_75nF} and~\ref{fig:osc_9uF} show the recorded output and probe waveforms for the two capacitance values at $R = \qty{3.2}{\kilo\ohm}$. For $C = \qty{9.3}{\micro\farad}$, $R = \qty{3.2}{\kilo\ohm}$, we counted 10 blinks over $\qty{1}{\s}$, giving a measured period of $\qty{1}{\s}$. For any smaller capacitances, the period was too small to measure by eye.
+We then connected a two-channel oscilloscope to the test point (TP) and op-amp output to observe the waveforms. Figures~\ref{fig:osc_75nF} and~\ref{fig:osc_9uF} show the recorded output for capacitance values at $C=\qty{75}{\nano\farad}$ and $C=\qty{9.3}{\micro\farad}$.
 
 \begin{figure}[H]
         \centering
         \includegraphics[width=\columnwidth]{output/oscillator_75nF_3.2kOhm.png}
-        \caption{Oscillator traces for $C = \qty{75}{\nano\farad}$, $R = \qty{3.2}{\kilo\ohm}$. The output (left) is a square wave oscillating between $\approx\qty{-1.3}{\volt}$ and $\qty{+1.4}{\volt}$. The probe signal (right) shows the capacitor charging/discharging between the two threshold voltages.}
+        \caption{Oscillator traces for $C = \qty{75}{\nano\farad}$, $R = \qty{3.2}{\kilo\ohm}$. The op-amp output (left) is a square wave oscillating; the test point (right) shows the capacitor charging/discharging between $-V_S/2$ and $V_S$.}
         \label{fig:osc_75nF}
 \end{figure}
 
 \begin{figure}[H]
         \centering
         \includegraphics[width=\columnwidth]{output/oscillator_9.3microF_3.2kOhm.png}
-        \caption{Oscillator traces for $C = \qty{9.3}{\micro\farad}$, $R = \qty{3.2}{\kilo\ohm}$. The larger capacitance produces a much slower oscillation. At this frequency ($\approx\qty{15}{\hertz}$), the LED blink is clearly visible to the eye.}
+        \caption{Oscillator traces for $C = \qty{9.3}{\micro\farad}$, $R = \qty{3.2}{\kilo\ohm}$. The larger capacitance produces a much slower oscillation of $\approx\qty{15}{\hertz}$ visible to the naked eye.}
         \label{fig:osc_9uF}
 \end{figure}
 
-\subsection{Frequency comparison with theory}
-
-Table~\ref{tab:freq} compares the measured oscillation frequencies to the theoretical prediction from Eq.~\eqref{eq:period}. The theoretical time constant is $\tau = RC$ and the predicted period is $T = 2\tau\ln 3$.
+Using cursors on our oscilloscope, we measured the period of oscillation for each configuratio. Table~\ref{tab:freq} compares the measured square wave frequencies to Eq.~\eqref{eq:period}, with a predicted period  $T \approx 2.2\tau$.
 
 \begin{table}[H]
         \centering
@@ -180,41 +176,36 @@ Table~\ref{tab:freq} compares the measured oscillation frequencies to the theore
                 {$C$}                     & {$\tau = RC$ (\unit{\milli\second})} & {$T_{\text{theory}}$ (\unit{\milli\second})} & {$f_{\text{theory}}$ (\unit{\hertz})} & {$f_{\text{meas}}$ (\unit{\hertz})} & {\% diff} \\
                 \midrule
                 {\qty{75}{\nano\farad}}   & 0.2400                               & 0.5273                                       & 1896                                  & 1987                                & 4.8       \\
-                {\qty{73}{\nano\farad}}   & 0.2336                               & 0.5133                                       & 1948                                  & 2034                                & 4.4       \\
                 {\qty{9.3}{\micro\farad}} & 29.76                                & 65.39                                        & 15.3                                  & 14.6                                & 4.6       \\
                 \bottomrule
         \end{tabular}
 \end{table}
 
-All three measurements agree with theory to within $\approx 5\%$. The small discrepancies likely arise from component tolerances (the potentiometer resistance and capacitor values are nominal), the op-amp's non-ideal saturation voltages, and the finite slew rate of the LM358.
-
-\subsection{Role of circuit components}
-
-The \textbf{voltage divider} (\qty{330}{\ohm} and \qty{220}{\ohm}) sets the DC bias at \qty{2}{\volt} (Eq.~\eqref{eq:vdivider}), centering the oscillation around a point within the op-amp's operating range rather than at ground.
-
-The \textbf{op-amp} acts as a comparator: it compares the capacitor voltage ($V_-$) to the threshold voltage ($V_+$) and snaps its output to the positive or negative saturation rail. The positive feedback through the two \qty{10}{\kilo\ohm} resistors creates hysteresis, ensuring clean switching and preventing the output from lingering at intermediate voltages.
-
-The \textbf{potentiometer} ($R$) and \textbf{capacitor} ($C$) form the timing network. The RC time constant directly controls the oscillation frequency via $f = 1/(2RC\ln 3)$. Increasing either $R$ or $C$ slows the oscillation.
-
-$$
-        I=\frac{V}{R}\,e^{-t/\tau}
-$$
-
-
-The \textbf{LED} (with its \qty{100}{\ohm} current-limiting resistor) and \textbf{speaker} provide visual and audible indicators of the oscillation. For $C = \qty{75}{\nano\farad}$, the $\approx\qty{2}{\kilo\hertz}$ tone is clearly audible. For $C = \qty{9.3}{\micro\farad}$, the $\approx\qty{15}{\hertz}$ oscillation is too slow to hear but produces a visible LED blink.
-
-% PLACEHOLDER: insert counted LED blink rate and speaker period measurements here
-% e.g., "We counted approximately X blinks in Y seconds, giving f_LED ≈ Z Hz,
-% consistent with the oscilloscope measurement."
+Both measurements give a percent different of $\approx 5\%$ from theory. The small discrepancies likely arise from component tolerances and the assumptions we made in our model, like an ideal op-amp constrained by the Golden Rules.
 
 
 \section{Conclusions}
 
-We built an RC relaxation oscillator that generates a square wave from a \qty{+5}{\volt} DC supply. The oscillation frequency is well described by $f = 1/(2RC\ln 3)$, with measured values agreeing to within $5\%$ of theory for both capacitance values tested. The op-amp's role as a hysteretic comparator is essential: positive feedback creates the bistable switching, while the RC network in the negative feedback path sets the timing. The voltage divider biases the circuit within the op-amp's linear range. By simply changing $R$ or $C$, the output frequency can be tuned from sub-hertz (visible LED blinking) to kilohertz (audible tones), demonstrating the versatility of this simple oscillator topology.
 
-\section{References}
-\begin{enumerate}
-        \item \label{ref:lm358} Texas Instruments, ``LM158, LM258, LM358, LM2904 Dual Operational Amplifiers,'' Datasheet, Oct.\ 2024. [Online]. Available: \url{https://www.ti.com/lit/ds/symlink/lm358.pdf}
-\end{enumerate}
+
+We discussed an RC oscillator circuit that generates an AC square wave from a \qty{+5}{\volt} DC supply. The op-amp's role as a comparator enables the circuit: positive feedback creates an switching behavior when negative capacitor feedback reaches a critical threshold, resulting in an indefinite charge/discharge cycle. An ideal theoretical model, assuming a perfect op-amp with infinite gain and zero input current, predicts an oscillation frequency of $f = 1/(2RC\ln 3)$. We built this circuit on a breadboard and observed our expected behavior, first trying a capacitor with $C=\qty{100}{\micro\farad}$, measuring 10 periods of $\qty{0.65}{\s}$ each with a stopwatch, matching our theoretical prediction by 8\%. Two additional configurations with $C=\qty{75}{\nano\farad}$ and $C=\qty{9.3}{\micro\farad}$ gave us measured frequencies agreeing within $5\%$ of theory. A DC-to-AC circuit like this has applications across electronics for devices like function generators, and potential uses in sound design for frequencies within an audible range.
+
+
+\begin{thebibliography}{9}
+        \bibitem{gingrich}
+        \label{ref:lm358} Texas Instruments, ``LM158, LM258, LM358, LM2904 Dual Operational Amplifiers,'' Datasheet, Oct.\ 2024. [Online]. Available: \url{https://www.ti.com/lit/ds/symlink/lm358.pdf}
+
+        \bibitem{copilot}
+        GitHub Copilot, AI-powered code completion tool by GitHub. Used for assistance with Python code development and \LaTeX\ formatting. \url{https://github.com/features/copilot}
+
+        \bibitem{graham}
+        Matt Graham, PHY411 Lecture notes, Oregon State University
+\end{thebibliography}
+
+\section*{Addendum}
+The native language of the author(s) is English.
+
+\end{document}
+
 
 \end{document}
