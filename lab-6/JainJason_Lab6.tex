@@ -140,7 +140,7 @@ We assembled Circuit~\ref{fig:circuit} on a breadboard (Figure~\ref{fig:breadboa
 
 
 
-For our first experiment, we tested a capacitor with $C = \qty{100}{\micro\farad}$. We observed that the speaker was beeping in time with the LED as expected, and counted a total 10 LED blinks over $\qty{6.51}{\s}$, yielding an experimental half period $6.51 / 20 = \qty{0.3255 }{s}$. This is within 8\% accuracy of the theoretical prediction from Eq~\eqref{period}: $1.1(\qty{3.2}{\kilo\ohm})(\qty{100}{\micro\farad})=\qty{0.351}{\s}$.
+For our first experiment, we tested a capacitor with $C = \qty{100}{\micro\farad}$. We observed that the speaker was beeping in time with the LED as expected, and counted a total 10 LED blinks over $\qty{6.51}{\s}$, yielding an experimental half period $6.51 / 20 = \qty{0.3255 }{s}$. This is within 8\% accuracy of the theoretical prediction from Eq~\eqref{period_th}: $1.1(\qty{3.2}{\kilo\ohm})(\qty{100}{\micro\farad})=\qty{0.351}{\s}$.
 
 We then connected a two-channel oscilloscope to the test point (TP) and op-amp output to observe the waveforms. Figures~\ref{fig:osc_75nF} and~\ref{fig:osc_9uF} show the recorded output for capacitance values at $C=\qty{75}{\nano\farad}$ and $C=\qty{9.3}{\micro\farad}$.
 
@@ -158,7 +158,7 @@ We then connected a two-channel oscilloscope to the test point (TP) and op-amp o
         \label{fig:osc_9uF}
 \end{figure}
 
-Using cursors on our oscilloscope, we measured the period of oscillation for each configuratio. Table~\ref{tab:freq} compares the measured square wave frequencies to Eq.~\eqref{eq:period}, with a predicted period  $T \approx 2.2\tau$.
+Using cursors on our oscilloscope, we measured the period of oscillation for each configuratio. Table~\ref{tab:freq} compares the measured square wave frequencies to Eq.~\eqref{period_th}, with a predicted period  $T \approx 2.2\tau$.
 
 \begin{table}[H]
         \centering
@@ -188,7 +188,9 @@ Both measurements give a percent different of $\approx 5\%$ from theory. The sma
 
 
 
-We discussed an RC oscillator circuit that generates an AC square wave from a \qty{+5}{\volt} DC supply. The op-amp's role as a comparator enables the circuit: positive feedback creates an switching behavior when negative capacitor feedback reaches a critical threshold, resulting in an indefinite charge/discharge cycle. An ideal theoretical model, assuming a perfect op-amp with infinite gain and zero input current, predicts an oscillation frequency of $f = 1/(2RC\ln 3)$. We built this circuit on a breadboard and observed our expected behavior, first trying a capacitor with $C=\qty{100}{\micro\farad}$, measuring 10 periods of $\qty{0.65}{\s}$ each with a stopwatch, matching our theoretical prediction by 8\%. Two additional configurations with $C=\qty{75}{\nano\farad}$ and $C=\qty{9.3}{\micro\farad}$ gave us measured frequencies agreeing within $5\%$ of theory. A DC-to-AC circuit like this has applications across electronics for devices like function generators, and potential uses in sound design for frequencies within an audible range.
+We built an RC oscillator circuit that converts a \qty{+5}{\volt} DC supply into an AC square wave using an LM358 op-amp, a capacitor, and a potentiometer. The op-amp acts as a comparator: positive feedback through a \qty{10}{\kilo\ohm} voltage divider creates a bistable switching threshold, while negative feedback through the RC network introduces a time delay as the capacitor charges and discharges exponentially. When the capacitor voltage $V_-$ crosses the threshold $V_+$, the output flips, driving the cycle indefinitely.
+
+We derived the oscillation period by solving the capacitor charge/discharge equations between the two switching thresholds set by the positive feedback divider. The resulting expression, $T = \tau(\ln(8/3) + \ln(7/2)) \approx 2.2\tau$ (Eq~\eqref{period_th}), depends only on the time constant $\tau = RC$ and the voltage divider ratios. With $R = \qty{3.2}{\kilo\ohm}$ and $C = \qty{100}{\micro\farad}$, we counted 10 LED blinks over \qty{6.51}{\s} with a stopwatch, yielding a half-period of \qty{0.326}{\s}---within 8\% of the predicted \qty{0.351}{\s}. Two additional capacitor values ($C = \qty{75}{\nano\farad}$ and $C = \qty{9.3}{\micro\farad}$) were measured on an oscilloscope, with frequencies agreeing within $\approx 5\%$ of theory (Table~\ref{tab:freq}). The small discrepancies are consistent with component tolerances and the ideal op-amp assumptions (Golden Rules) used in our model. This simple DC-to-AC converter has practical applications in function generators and audible-frequency sound design.
 
 
 \begin{thebibliography}{9}
@@ -204,8 +206,5 @@ We discussed an RC oscillator circuit that generates an AC square wave from a \q
 
 \section*{Addendum}
 The native language of the author(s) is English.
-
-\end{document}
-
 
 \end{document}

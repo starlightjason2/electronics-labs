@@ -26,7 +26,7 @@ df["R"] = df["V_ref"] / df["V_in"]
 # transmission coefficient
 df["T"] = df["V_term"] / df["V_in"]
 
-length = 312  # meters
+length = 156  # meters (single pass)
 period = 1.58  # Time between pulses (micro s)
 speed = 1.97e8  # m/s
 

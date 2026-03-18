@@ -36,10 +36,11 @@ r0 = 39 / 1000
 z0 = 53.5
 c0 = 100e-12
 v = 1.97e8
-damping_factor = np.exp(
-    -0.5 * r0 * c0 * v * 2 * length
-)  # Γ L / (2v) or equivalent exponent for amplitude decay
-print(damping_factor)
+# Single-pass attenuation: e^{-Γ L / 2v} where Γ/2v = R0 C0 v / 2
+alpha = 0.5 * r0 * c0 * v * length  # exponent for one traversal
+damp_1x = np.exp(-alpha)  # transmission (single pass)
+damp_2x = np.exp(-2 * alpha)  # reflection (round trip)
+print(f"single-pass damping = {damp_1x:.4f}, round-trip damping = {damp_2x:.4f}")
 
 
 def theory_R(z1, z2):
@@ -61,8 +62,8 @@ ax.plot(
 
 ax.plot(
     r_values,
-    [theory_R(z0, r) * damping_factor for r in r_values],
-    label=r"$T_{\mathrm{theory}}$ with damping",
+    [theory_R(z0, r) * damp_2x for r in r_values],
+    label=r"$R_{\mathrm{theory}}$ with damping",
     color="C0",
     linestyle="--",
 )
@@ -76,7 +77,7 @@ ax.plot(
 )
 ax.plot(
     r_values,
-    [theory_T(z0, r) * damping_factor for r in r_values],
+    [theory_T(z0, r) * damp_1x for r in r_values],
     label=r"$T_{\mathrm{theory}}$ with damping",
     color="C1",
     linestyle="--",
