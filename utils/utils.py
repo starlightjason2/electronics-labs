@@ -40,7 +40,7 @@ def format_sig_figs(value, sig_figs: int = 3, unit: str = ""):
             formatted = sci_str
     else:
         formatted = np.format_float_positional(
-            value, precision=sig_figs - 1, fractional=False
+            value, precision=sig_figs - 1, fractional=False, trim="-"
         )
 
     if unit:
@@ -64,16 +64,16 @@ def add_equation_text(
     if not params:
         return equation
 
-    param_str = ",  ".join(
-        [
-            (
-                f"{k} = {format_sig_figs(v[0], unit=v[1])}"
-                if isinstance(v, tuple)
-                else f"{k} = {format_sig_figs(v)}"
-            )
-            for k, v in params.items()
-        ]
-    )
+    parts = [
+        (
+            f"{k} = {format_sig_figs(v[0], unit=v[1])}"
+            if isinstance(v, tuple)
+            else f"{k} = {format_sig_figs(v)}"
+        )
+        for k, v in params.items()
+    ]
+    lines = [",  ".join(parts[i:i+2]) for i in range(0, len(parts), 2)]
+    param_str = "$\n$".join(lines)
     if equation:
         return f"{equation},\n${param_str}$"
     return f"${param_str}$"

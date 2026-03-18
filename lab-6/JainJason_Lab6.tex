@@ -23,19 +23,21 @@
 
 
 \begin{abstract}
-        We construct a square wave function generator on a breadboard, using an LM358 op-amp, a capacitor, and a potentiometer; the circuit functions as an RC oscillator circuit converting DC to AC current. We discuss the physics of our circuit and develop a theoretical model for calculating output frequency from the time constant $\tau=RC$. For a capacitor with $C=\qty{100}{\micro\farad}$ and potentiometer at $R=\qty{3.2}{\kilo\ohm}$, we found a period of $\qty{0.325}{\s}$ with a stopwatch, matching our model's prediction within 8\%. We tested two more capacitors ($C=\qty{75}{\nano\farad}$ and $C=\qty{9.3}{\micro\farad}$) at the same resistance, plotting the square wave op-amp output and the capacitor charge/discharge cycle on a two-channel oscilloscope. The oscilloscope's measured frequencies agreed with theory to within $5\%$, supporting our model and providing a theoretical foundation for analyzing op-amps.
+        We construct a square wave function generator on a breadboard, using an LM358 op-amp, a capacitor, and a potentiometer; the circuit functions as an RC oscillator circuit converting DC to AC current. We discuss the physics of our circuit and develop a theoretical model for calculating output frequency from the time constant $\tau=RC$. For a capacitor with $C=\qty{100}{\micro\farad}$ and potentiometer at $R=\qty{3.2}{\kilo\ohm}$, we found a half-period of $\qty{0.325}{\s}$ with a stopwatch, matching our model's prediction within 8\%. We tested two more capacitors ($C=\qty{75}{\nano\farad}$ and $C=\qty{9.3}{\micro\farad}$) at the same resistance, plotting the square wave op-amp output and the capacitor charge/discharge cycle on a two-channel oscilloscope. The oscilloscope's measured frequencies agreed with theory to within $5\%$, supporting our model and providing a theoretical foundation for analyzing op-amps.
 \end{abstract}
 
 
 \section{Introduction}
 
-Op-amps are powerful and fundamental electrical components used widely in modern technology. To explore the applications of op-amps, we build a simple RC oscillator circuit with an LM358 op-amp, capacitor, and variable resistance potentiometer. The op-amp will behave as a comparator and continuously charge/discharge the capacitor--by dialing the potentiometer or swapping the capacitor, we can adjust the frequency of the square wave.  The resulting circuit has applications across electronics for converting DC to AC current, and can even be used for generating sounds at audible frequencies.
+Op-amps are powerful and fundamental electrical components used widely in modern technology. To explore the applications of op-amps, we build a simple RC oscillator circuit with an LM358 op-amp, capacitor, and variable resistance potentiometer. This circuit uses positive feedback, so the Golden Rules are not strictly obeyed, but the op-amp still maintains its function as a comparator, continuously charging/discharging the capacitor. By dialing the potentiometer or swapping the capacitor, we can adjust the frequency of the resulting square wave. We aim to derive a theoretical model for the oscillation period in terms of the time constant $\tau=RC$, and verify it experimentally. The resulting circuit has applications across electronics for converting DC to AC current, and can even be used for generating sounds at audible frequencies.
 
 
 \section{Theory}
 
 
-The three crucial components of this circuit are the op-amp, capacitor, and voltage divider, and we discuss the equations governing each. An op-amp is a comparator and amplifier, taking two inputs and scaling the differential by a high gain factor. This sets the output $V_\text{out}$ until some maximum saturation voltage $V_S$\cite{graham}. An ideal op-amp follows the Golden Rules, with zero input current $I_\text{in}=0$ and equal feedback voltages $V_{+}\approx  V_{-}$. We assume an ideal op-amp, although we will show that it takes some time for the voltages to equalize (equal to the half-period of oscillation). Next up is the capacitor, a device that stores charge; the equations for charge/discharge voltage are given total change $\Delta V$ for starting $V(0)=V_0$ are Eq~\eqref{cap_charge}. The capacitor time constant is defined as $\tau\equiv RC$\cite{graham}.
+The three crucial components of this circuit are the op-amp, capacitor, and voltage divider, and we discuss the equations governing each. An op-amp is a comparator and amplifier, taking two inputs and scaling the differential by a high gain factor. This sets the output $V_\text{out}$ until some maximum saturation voltage $V_S$~\cite{graham}. An ideal op-amp follows the Golden Rules, with zero input current $I_\text{in}=0$ and equal feedback voltages $V_{+}\approx  V_{-}$. We assume an ideal op-amp, although we will show that it takes some time for the voltages to equalize (equal to the half-period of oscillation). This is because of the positive feedback in the circuit, which prevents the Golden Rules from being unilaterally applied.
+
+Next up is the capacitor, a device that stores charge; the equations for charge/discharge voltage given total change $\Delta V$ from starting $V(0)=V_0$ are Eq~\eqref{cap_charge}. The capacitor time constant is defined as $\tau\equiv RC$~\cite{graham}.
 
 \begin{align}
         \label{cap_charge}
@@ -43,7 +45,7 @@ The three crucial components of this circuit are the op-amp, capacitor, and volt
         V(t) & =\Delta V\,e^{-t/\tau}
 \end{align}
 
-Finally, given two resistors $R_1, \ R_2$, a voltage divider sets a threshold voltage weighted by each resistance\cite{graham}.
+Finally, given two resistors $R_1, \ R_2$, a voltage divider sets a threshold voltage weighted by each resistance~\cite{graham}.
 
 
 \begin{equation}
@@ -112,7 +114,7 @@ The positive feedback ($V_+$) is stabilized by another voltage divider with $R_1
 
 The interesting physics happens in the negative feedback ($V_-$), connected to a capacitor-resistor circuit with exponential charge/discharge. When the capacitor drops below the critical threshold $V_-<V_+$, the output will immediately create a positive voltage and force a charge cycle. The op-amp will rapidly reach some saturation voltage $V_\text{out}=V_S$; for an ideal op-amp this switch happens instantaneously, so at any given moment $V_\text{out}=0$ at ground (forcing a discharge) or $V_\text{out}=V_S$ at saturation (forcing a charge). Because of the positive feedback loop, we assume $V_+$ likewise switched instantaneously. Substituting the constraints for $V_\text{out}$ into Eq~\eqref{vplus}, we see that $V_+$ is constrained by $V_\text{ref}/2 \leq V_+ \leq (V_\text{ref} + V_S) / 2$. Assuming a saturation voltage of our power output, $\qty{5}{\volt}$, we get $\qty{1}{\volt} \leq V_+ \leq \qty{3.5}{\volt}$.
 
-The capacitor, however, takes time to charge/discharge. When $V_+$ flips to $\qty{1}{\volt}$, the capacitor remains stuck at $\qty{3.5}{\volt}$ and discharges towards ground until $V_-=V_+=\qty{1}{\volt}$; then $V_+$ flips to $\qty{3.5}{\volt}$, but the capacitor is still at $\qty{1}{\volt}$ and starts charging up to saturation until $V_-=V_+=\qty{3.5}{\volt}$. Using \eqref{cap_charge} $V_\text{ref}=\qty{2}{\volt}$ can give us the "flipping" time in each case. While discharging, $\Delta V = \qty{3.5}{\volt}$; while charging, $\Delta V = 5-1= \qty{4}{\volt}, \ V_0 = \qty{1}{\volt}$ (from the previous cycle).
+The capacitor, however, takes time to charge/discharge. When $V_+$ flips to $\qty{1}{\volt}$, the capacitor remains stuck at $\qty{3.5}{\volt}$ and discharges towards ground until $V_-=V_+=\qty{1}{\volt}$; then $V_+$ flips to $\qty{3.5}{\volt}$, but the capacitor is still at $\qty{1}{\volt}$ and starts charging up to saturation until $V_-=V_+=\qty{3.5}{\volt}$. Using Eq~\eqref{cap_charge} with $V_\text{ref}=\qty{2}{\volt}$ can give us the "flipping" time in each case. While discharging, $\Delta V = \qty{3.5}{\volt}$; while charging, $\Delta V = 5-1= \qty{4}{\volt}, \ V_0 = \qty{1}{\volt}$ (from the previous cycle). This gap is why we say the Golden Rules are not strictly followed. Solving for the charge/discharge times,
 
 \begin{align*}
         3.5 & =1+4\left(1-e^{-t_1/\tau}\right) \\
@@ -128,7 +130,7 @@ Therefore, $-t_1\tau=\ln(1 - (2.5 / 4))=\ln(3 / 8)$ or $t_1=\tau\ln(8/3)$, and $
 
 \section{Experimental Procedure}
 
-We assembled Circuit~\ref{fig:circuit} on a breadboard (Figure~\ref{fig:breadboard}) and powered it with a \qty{+5}{\volt} DC supply. The potentiometer was kept at to $R = \qty{3.2}{\kilo\ohm}$, (measured with a multimeter).
+We assembled Circuit~\ref{fig:circuit} on a breadboard (Figure~\ref{fig:breadboard}) and powered it with a \qty{+5}{\volt} DC supply. The potentiometer was set to $R = \qty{3.2}{\kilo\ohm}$ (measured with a multimeter).
 
 
 \begin{figure}[H]
@@ -147,18 +149,18 @@ We then connected a two-channel oscilloscope to the test point (TP) and op-amp o
 \begin{figure}[H]
         \centering
         \includegraphics[width=\columnwidth]{output/oscillator_75nF_3.2kOhm.png}
-        \caption{Oscillator traces for $C = \qty{75}{\nano\farad}$, $R = \qty{3.2}{\kilo\ohm}$. The op-amp output (left) is a square wave oscillating; the test point (right) shows the capacitor charging/discharging between $-V_S/2$ and $V_S$.}
+        \caption{Oscillator traces for $C = \qty{75}{\nano\farad}$, $R = \qty{3.2}{\kilo\ohm}$. The op-amp output (left) is a square wave; the test point (right, AC-coupled) shows the capacitor charging/discharging. Dashed curves are fits of Eq~\eqref{cap_charge} to the first charge (green) and discharge (purple) half-cycle; faded extensions show where each exponential would continue if the op-amp did not switch.}
         \label{fig:osc_75nF}
 \end{figure}
 
 \begin{figure}[H]
         \centering
         \includegraphics[width=\columnwidth]{output/oscillator_9.3microF_3.2kOhm.png}
-        \caption{Oscillator traces for $C = \qty{9.3}{\micro\farad}$, $R = \qty{3.2}{\kilo\ohm}$. The larger capacitance produces a much slower oscillation of $\approx\qty{15}{\hertz}$ visible to the naked eye.}
+        \caption{Oscillator traces for $C = \qty{9.3}{\micro\farad}$, $R = \qty{3.2}{\kilo\ohm}$ (AC-coupled). The larger capacitance produces a much slower oscillation of $\approx\qty{15}{\hertz}$ visible to the naked eye. Dashed curves show fits of Eq~\eqref{cap_charge} for one charge/discharge cycle, with faded extensions beyond the fitted region.}
         \label{fig:osc_9uF}
 \end{figure}
 
-Using cursors on our oscilloscope, we measured the period of oscillation for each configuratio. Table~\ref{tab:freq} compares the measured square wave frequencies to Eq.~\eqref{period_th}, with a predicted period  $T \approx 2.2\tau$.
+Using cursors on our oscilloscope, we measured the period of oscillation for each configuration. Table~\ref{tab:freq} compares the measured square wave frequencies to Eq.~\eqref{period_th}, with a predicted period  $T \approx 2.2\tau$.
 
 \begin{table}[H]
         \centering
@@ -181,17 +183,14 @@ Using cursors on our oscilloscope, we measured the period of oscillation for eac
         \end{tabular}
 \end{table}
 
-Both measurements give a percent different of $\approx 5\%$ from theory. The small discrepancies likely arise from component tolerances and the assumptions we made in our model, like an ideal op-amp constrained by the Golden Rules.
+Both measurements give a percent difference of $\approx 5\%$ from theory. The op-amp output is a clean square wave toggling between ground and saturation, while the test point (TP) shows the characteristic exponential charge/discharge curves of the capacitor between the two threshold voltages. To verify the exponential shape, we fit \eqref{cap_charge} to the first period of each probe trace  (Figures~\ref{fig:osc_75nF} and~\ref{fig:osc_9uF}), and found the fitted time constants consistent with the theoretical $\tau=RC$. Increasing the capacitance from \qty{75}{\nano\farad} to \qty{9.3}{\micro\farad} slows the oscillation from $\approx\qty{2}{\kilo\hertz}$ down to $\approx\qty{15}{\hertz}$, consistent with the linear dependence on $\tau=RC$ predicted by our model. We also note that the charge and discharge half-periods are not equal ($t_1=\tau\ln(8/3) \neq t_2=\tau\ln(7/2)$), meaning the duty cycle is not exactly 50\%---this asymmetry is visible in the probe traces and arises from the voltage divider reference not sitting at $V_S/2$. The small discrepancies likely arise from component tolerances (rated vs.\ actual values) and our ideal op-amp assumptions---the real LM358 has a finite switching time and a saturation voltage slightly below \qty{5}{\volt}, both of which shift the period from ideal predictions.
 
 
 \section{Conclusions}
 
 
 
-We built an RC oscillator circuit that converts a \qty{+5}{\volt} DC supply into an AC square wave using an LM358 op-amp, a capacitor, and a potentiometer. The op-amp acts as a comparator: positive feedback through a \qty{10}{\kilo\ohm} voltage divider creates a bistable switching threshold, while negative feedback through the RC network introduces a time delay as the capacitor charges and discharges exponentially. When the capacitor voltage $V_-$ crosses the threshold $V_+$, the output flips, driving the cycle indefinitely.
-
-We derived the oscillation period by solving the capacitor charge/discharge equations between the two switching thresholds set by the positive feedback divider. The resulting expression, $T = \tau(\ln(8/3) + \ln(7/2)) \approx 2.2\tau$ (Eq~\eqref{period_th}), depends only on the time constant $\tau = RC$ and the voltage divider ratios. With $R = \qty{3.2}{\kilo\ohm}$ and $C = \qty{100}{\micro\farad}$, we counted 10 LED blinks over \qty{6.51}{\s} with a stopwatch, yielding a half-period of \qty{0.326}{\s}---within 8\% of the predicted \qty{0.351}{\s}. Two additional capacitor values ($C = \qty{75}{\nano\farad}$ and $C = \qty{9.3}{\micro\farad}$) were measured on an oscilloscope, with frequencies agreeing within $\approx 5\%$ of theory (Table~\ref{tab:freq}). The small discrepancies are consistent with component tolerances and the ideal op-amp assumptions (Golden Rules) used in our model. This simple DC-to-AC converter has practical applications in function generators and audible-frequency sound design.
-
+The RC oscillator's behavior is driven by the op-amp juggling positive and negative feedback in a perpetual oscillation. A voltage divider along the positive feedback path sets switching thresholds at $V_+=\qty{1}{\volt}$ and $\qty{3.5}{\volt}$; the capacitor on the negative feedback loop charges/discharges in pursuit, but the positive feedback immediately switches thresholds when it catches up. We derived the oscillation period $T\approx 2.2\tau$ (Eq~\eqref{period_th}) from the capacitor charge/discharge equations, and verified it across three capacitor values: a stopwatch measurement with $C=\qty{100}{\micro\farad}$ matched within 8\%, and oscilloscope measurements with $C=\qty{75}{\nano\farad}$ and $C=\qty{9.3}{\micro\farad}$ matched within $\approx 5\%$ (Table~\ref{tab:freq}). The theoretical exponential fit on the probe traces (Figures~\ref{fig:osc_75nF},~\ref{fig:osc_9uF}) further confirms the model, and reveals an asymmetric duty cycle ($t_1 \neq t_2$) arising from the off-center voltage divider reference. This simple circuit reliably converts a DC supply into a tunable AC square wave, with applications in function generators and audible-frequency sound design.
 
 \begin{thebibliography}{9}
         \bibitem{gingrich}
