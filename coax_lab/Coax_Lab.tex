@@ -23,14 +23,14 @@
 \maketitle
 
 \begin{abstract}
-  Coax cables transmit voltage waves at high fractions of light speed and are ubiquitous in modern communications. We send a pulsed wave through a $\qty{156}{\meter}$ long RG-58 coax cable, observe the waveform with an oscilloscope, and calculate the wave speed to be $\qty{1.97e8}{\meter / \s}$, matching the spec sheet value of 66\% of the speed of light to within 1.5\%. To simulate a boundary, we use a splitter with a terminating resistor connected to a second oscilloscope channel and measure the amplitudes of the incident, reflected, and transmitted pulses to determine the reflection and transmission coefficients. We observe the expected behavior across a range of terminating resistances, and find that a lightly damped model incorporating cable resistance better accounts for amplitude losses at high terminating impedances.
+  Coax cables transmit voltage waves at high fractions of light speed and are ubiquitous in modern communications. We model such a voltage wave with the wave equation and derive expressions for wave speed and reflection/transmission coefficients.  Sending a pulsed wave through a $\qty{156}{\meter}$ long RG-58 coax cable, we observe the waveform with an oscilloscope and calculate wave speed to be $\qty{1.97e8}{\meter / \s}$, matching the data-sheet value within 1.5\%. To simulate a boundary, we use a splitter with a terminating resistor connected to a second oscilloscope channel and measure the amplitudes of the incident, reflected, and transmitted pulses to determine the reflection and transmission coefficients. We observe the expected behavior across a range of terminating resistances, and find that an underdamped model incorporating cable resistance better accounts for amplitude losses at high terminating impedances. This improves the fit of our model, but slight discrepancies continue to persist.
 \end{abstract}
 
 \section{Introduction}\label{sec:introduction}
 
-Coax cables are foundational to modern communications, used for transmitting internet, telephone, and television signals worldwide. A coax cable consists of four layers---a center conductor, a dielectric insulator, an outer conducting shield, and a protective jacket---and can be modeled as a distributed transmission line with resistance $R$, inductance $L$, and capacitance $C$ per unit length~\cite{gfgcoax}.
+Coax cables are foundational to modern communications, used for transmitting internet, telephone, and television signals worldwide. A coax cable consists of four layers---a center conductor, a dielectric insulator, an outer conducting shield, and a protective jacket---and can be modeled as a distributed RLC circuit with resistance $R$, inductance $L$, and capacitance $C$ per unit length~\cite{gfgcoax}.
 
-We develop and test a model for wave propagation, reflection, and transmission in such a cable. We set up a $\qty{156}{\meter}$ long RG-58 coax cable driven by a function generator; oscilloscope channels are connected at the near and far ends to measure incident, reflected, and transmitted pulses. In the first experiment we measure the wave propagation speed; in the second we measure reflection and transmission coefficients for a range of terminating resistances and compare to theoretical predictions, including a lightly damped correction for cable losses.
+We develop and test a model for wave propagation, reflection, and transmission in a $\qty{156}{\meter}$ long RG-58 coax cable (Figure~\ref{coax_setup}) driven by a function generator. Oscilloscope channels are connected at the near and far ends to measure incident, reflected, and transmitted pulses. In the first experiment we measure the wave propagation speed; in the second we measure reflection and transmission coefficients for a range of terminating resistances and compare to theoretical predictions, including a lightly damped correction for cable losses.
 
 
 
@@ -55,14 +55,20 @@ We develop and test a model for wave propagation, reflection, and transmission i
     to[oscope, l=$CH2$] ++(0, 3);
   \end{circuitikz}
 
-  \caption{Experimental setup for the coax cable lab. A pulsed voltage $V_{\text{in}}$ from a function generator is launched into a \qty{156}{\meter} RG-58 coax cable (characteristic impedance $Z_0 \approx \qty{53.5}{\ohm}$). Channel~1 (CH1) monitors the input end, capturing both the outgoing incident pulse and the pulse reflected from the far end. Channel~2 (CH2) monitors the transmitted pulse across a variable terminating resistor $R_{\text{term}}$, which simulates a wave crossing into a medium of different impedance. Varying $R_{\text{term}}$ from below to above $Z_0$ sweeps the reflection coefficient from negative through zero to positive, providing a clean test of the transmission-line boundary model.}
+  \caption{Experimental setup for the coax cable lab. A pulsed voltage $V_{\text{in}}$ is sent into a \qty{156}{\meter} RG-58 coax cable. Channel~1 (CH1) monitors the input end, capturing both the outgoing incident pulse and the pulse reflected from the far end. Channel~2 (CH2) monitors the transmitted pulse across a variable terminating resistor $R_{\text{term}}$, which simulates a wave crossing into a medium of different impedance.}
   \label{fig:coax_setup}
 \end{figure}
 
 
 \section{Theory}\label{sec:theory}
 
-We model a lightly damped traveling wave $\psi(x,t)$ with Eq.~\eqref{wave}, where $\Gamma$ is the damping coefficient, $A$ is the amplitude, $\phi$ is the phase, and the wave speed is $v=\omega/k$ \cite{georgi}.
+We model a traveling wave $\psi(x,t)$ with the wave equation, where $\Gamma$ is the damping coefficient and wave speed $v$.
+
+\begin{equation}
+  \frac{\partial^2 \psi}{\partial t^2}-v^{2}\,\frac{\partial^2 \psi}{\partial x^2}=0
+\end{equation}
+
+For travelling waves, the wave equation has a known under-damped solution \eqref{wave}, for amplitude $A$, time frequency $\omega$, wave number $k$, phase $\phi$, and wave speed $v=\omega/k$ \cite{georgi}.
 
 \begin{equation}
   \label{wave}
@@ -83,7 +89,7 @@ The reflection and transmission coefficients follow from Eq.~\eqref{boundary_con
   R\equiv \frac{B}{A}= \frac{z_2-z_1}{z_2 + z_1}, \quad T\equiv \frac{C}{A}= \frac{2z_1}{z_2 + z_1}
 \end{equation}
 
-Notice that $T = 1 + R$ for all cases. Substituting values our cable with characteristic impedance $Z_0=\qty{53.5}{\ohm}$ (from the data sheet) and terminating resistance $R_\mathrm{term}$ acting as $z_2$:
+Notice that $T = 1 + R$ for all cases. Neglecting damping and substituting values, our cable with characteristic impedance $z_1=Z_0=\qty{53.5}{\ohm}$ (from the data sheet~\cite{spec}) and terminating resistance $z_2=R_\mathrm{term}$:
 
 \begin{equation}
   \label{th_coeff}
@@ -105,7 +111,7 @@ For a more accurate prediction, we can take damping into account. Using $v=1/\sq
 
 \begin{table}[H]
   \centering
-  \caption{Reflection and transmission coefficients for a range of terminating resistances, computed from pulse heights. Reflection is negative for $R_\mathrm{term} < Z_0$, near zero at the matched condition $R_\mathrm{term} \approx Z_0$, and positive for $R_\mathrm{term} > Z_0$; transmission is with $T = 1+R$, with 100\% transmission for zero reflection. Interpolating the $R \approx 0$ row gives us an experimental cable impedance $Z_{0,\mathrm{exp}} = \qty{53.8}{\ohm}$. The last row is the open-circuit ($R_\mathrm{term} \to \infty$) corresponding to Figure~\ref{fig:pic1}.}
+  \caption{Reflection and transmission coefficients for a range of terminating resistances, computed from pulse heights. Reflection is negative for $R_\mathrm{term} < Z_0$, near zero at the impedance matching condition $R_\mathrm{term} \approx Z_0$, and positive for $R_\mathrm{term} > Z_0$; transmission follows $T = 1+R$, with 100\% transmission when impedance matching. Interpolating the $R \approx 0$ row gives us an experimental cable impedance $Z_{0,\mathrm{exp}} = \qty{53.8}{\ohm}$. The last row is the open-circuit ($R_\mathrm{term} \to \infty$) corresponding to Figure~\ref{fig:pic1}.}
   \label{tab:data}
   \small
   \begin{tabular}{
@@ -134,6 +140,20 @@ For a more accurate prediction, we can take damping into account. Using $v=1/\sq
 \subsection{Measuring Wave Speed}
 
 
+
+To measure wave speed, we connected CH1 at the input, leaving the far end open (no terminating resistor) and launching a pulse of height $\qty{1.86}{\volt}$. We see the outgoing and reflected pulses in Figure~\ref{fig:pic1}. Using oscilloscope cursors, we measured a round-trip time $\Delta t = \qty{1.56}{\micro\s}$; since the pulse travels $2l = \qty{312}{\meter}$ in that interval:
+
+\begin{equation}
+  \label{wave_vel}
+  v=\frac{2l}{\Delta t}=0.657c=\qty{1.97e8}{\meter\per\second}
+\end{equation}
+
+
+
+This agrees with the data sheet specification of 66\% of $c$ to within 1.45\%. Note that this is the phase velocity of the electromagnetic wave, not the drift velocity of the conduction electrons. The electrons' material velocity is far smaller: each electron oscillates only slightly to advance the disturbance to its neighbor, similar to sound propagating through air.
+
+
+
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.5\columnwidth]{data/pic2.jpg}
@@ -142,17 +162,13 @@ For a more accurate prediction, we can take damping into account. Using $v=1/\sq
 \end{figure}
 
 
-To measure wave speed, we connected CH1 at the input end and left the far end open (no terminating resistor), capturing the outgoing pulse and the pulse returning after reflecting from the open end. A voltage pulse of height $\qty{1.86}{\volt}$ was launched into the cable, and using the oscilloscope cursors, we measured a round-trip time $\Delta t = \qty{1.56}{\micro\s}$; since the pulse travels $2l = \qty{312}{\meter}$ in that interval:
-
-\begin{equation}
-  \label{wave_vel}
-  v=\frac{2l}{\Delta t}=0.657c=\qty{1.97e8}{\meter\per\second}
-\end{equation}
-
-This agrees with the data sheet specification of 66\% of $c$ to within 1.45\%. This is the phase velocity of the electromagnetic wave, not the drift velocity of the conduction electrons. The electrons' material velocity is far smaller: each electron oscillates only slightly to advance the disturbance to its neighbor, similar to sound propagating through air.
-
-
 \subsection{Characterizing Reflection and Transmission}
+
+
+
+
+In the second experiment, we attached terminating resistors ranging from $20$ to $\qty{150}{\ohm}$ to the far end and connected CH2 across each resistor (Figure~\ref{fig:coax_setup}). For each value of $R_\mathrm{term}$ we used cursors to read the incident ($V_I$), reflected ($V_R$), and transmitted ($V_T$) pulse heights, giving the measured coefficients $R = V_R/V_I$ and $T = V_T/V_I$ listed in Table~\ref{tab:data}. A photograph of the oscilloscope traces clearly distinguishes incident, reflected, and transmitted waveforms (Figure~\ref{fig:pic2}).
+
 
 
 \begin{figure}[H]
@@ -163,7 +179,7 @@ This agrees with the data sheet specification of 66\% of $c$ to within 1.45\%. T
 \end{figure}
 
 
-In the second experiment, we attached terminating resistors ranging from $20$ to $\qty{150}{\ohm}$ to the far end and connected CH2 across each resistor (Figure~\ref{fig:coax_setup}). For each value of $R_\mathrm{term}$ we used cursors to read the incident ($V_I$), reflected ($V_R$), and transmitted ($V_T$) pulse heights, giving the measured coefficients $R = V_R/V_I$ and $T = V_T/V_I$ listed in Table~\ref{tab:data}.
+Our undamped model fits well at low to moderate resistances but overestimates amplitudes at high $R_\mathrm{term}$ (Figure~\ref{fig:wave_propagation}). This indicates non-ideal energy loss in the cable. Since the reflected pulse travels twice as long as the transmitted pulse, any energy loss is amplified x2, which explains why the trasmission curve fits slightly better.
 
 
 
@@ -175,19 +191,18 @@ In the second experiment, we attached terminating resistors ranging from $20$ to
 \end{figure}
 
 
-The undamped model fits well at low to moderate resistances but overestimates amplitudes at high $R_\mathrm{term}$ (Figure~\ref{fig:wave_propagation}). This systematic shortfall points to resistive energy loss in the cable. Incorporating the damping factor from Eq.~\eqref{damp_coeff} with $C_0 = \qty{100}{\pico\farad\per\meter}$ and $v = \qty{1.97e8}{\meter\per\second}$ gives $\Gamma/2v = \qty{3.86e-4}{\per\meter}$, so a pulse traversing the cable is attenuated by $e^{-\Gamma L/2v} = 0.89$---an 11\% amplitude reduction. The cable's total resistance $R_0 L = \qty{0.0392}{\ohm\per\meter} \times \qty{156}{\meter} = \qty{6.1}{\ohm}$ is small compared to $Z_0 = \qty{53.5}{\ohm}$, confirming the light-damping approximation is appropriate.
-
+To get a better result, we incorporating the damping factor from Eq.~\eqref{damp_coeff} with $C_0 = \qty{100}{\pico\farad\per\meter}$ and $v = \qty{1.97e8}{\meter\per\second}$. This gives us a damping factor $\Gamma/2v = \qty{3.86e-4}{\per\meter}$, so a pulse traversing the cable is attenuated by $e^{-\Gamma L/2v} = 0.89$, or an 11\% amplitude reduction. The cable's resistance per meter (from data sheet~\cite{spec}) gives a total resistance $R_0 L = \qty{0.0392}{\ohm\per\meter} \times \qty{156}{\meter} = \qty{6.1}{\ohm}$, which is small compared to $Z_0 = \qty{53.5}{\ohm}$ and justifies the under-damped solution. The results are shown in Figure~\ref{fig:wave_propagation_damping} -- the transmission curve fits very well, but the reflected curve is still a bit off. As previously mentioned, we expect any energy losses to be doubled for the reflected case.
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.65\columnwidth]{wave_propagation_damping.png}
-  \caption{Same data as Figure~\ref{fig:wave_propagation} with the under correction added. Dashed curves include the attenuation factor $e^{-\Gamma L/2v}$ from Eq.~\eqref{damp_coeff} with $\Gamma/2v = \qty{3.86e-4}{\per\meter}$. The damped model reduces the systematic over-prediction at high $R_\mathrm{term}$, confirming that resistive loss in the cable is the primary source of the discrepancy seen in Figure~\ref{fig:wave_propagation}.}
+  \caption{Same data as Figure~\ref{fig:wave_propagation} with the underdamped correction added. Dashed curves include the attenuation factor $e^{-\Gamma L/2v}$ from Eq.~\eqref{damp_coeff} with $\Gamma/2v = \qty{3.86e-4}{\per\meter}$. The damped model improves the over-prediction at high $R_\mathrm{term}$.}
   \label{fig:wave_propagation_damping}
 \end{figure}
 
 \section{Conclusions}\label{sec:conclusions}
 
-We investigated pulse propagation in a \qty{156}{\meter} RG-58 coax cable, testing models for wave speed and for reflection and transmission at a resistive boundary. Setting up a $\qty{156}{\meter}$ long RG-58 coax cable with a two-channel oscilloscope, we observed the reflection and transmission of voltage pulses with varying terminating resistances. We found a wave speed of $\qty{1.97e8}{\meter\per\second}$, within 1.5\% of the data-sheet value of $0.66c$. Measured reflection and transmission coefficients follow our predicted trends, and we use our data to calculate an experimental $Z_0 = \qty{53.8}{\ohm}$, within 0.6\% of the data sheet value. Predicted coefficients overshoot for larger $R_\mathrm{term}$, so we offer a more accurate damping model with an 11\% attenuation factor, calculated from the cable's total resistance ($\qty{6.1}{\ohm}$). The damped model has better agreement with the data, but still has minor discrepancies from inefficiencies in the circuit and component tolerances. However, our model is still a powerful tool for capturing the basic physics of coax cables, and can be used for impedance-matching transmission and minimizing signal loss from reflection.
+We investigated pulse propagation in a \qty{156}{\meter} RG-58 coax cable, modeling a travelling wave using the wave equation and deriving a model for wave speed and reflection/transmission coefficients at a variable resistive boundary. Setting up a $\qty{156}{\meter}$ long RG-58 coax cable with a two-channel oscilloscope, we observed the reflection and transmission of voltage pulses with 6 different terminating resistances and found a wave speed of $\qty{1.97e8}{\meter\per\second}$, within 1.5\% of the data-sheet value of $0.66c$. Measured reflection and transmission coefficients follow predicted trends, and we use our data to calculate an experimental $Z_0 = \qty{53.8}{\ohm}$, within 0.6\% of the data sheet value. Predicted coefficients overshoot for larger $R_\mathrm{term}$, so we offer a more accurate damping model with an 11\% attenuation factor, calculated from the cable's total resistance ($\qty{6.1}{\ohm}$). The damped model has better agreement with the data, but still has minor discrepancies from inefficiencies in the circuit and component tolerances. The pulse travels twice as long for the reflected case, doubling any energy losses compared to the transmitted case; therefore, the errors are more pronounced for our reflection coefficients. However, our model is still a powerful tool for capturing the basic physics of coax cables, and can be used for impedance-matching transmission and minimizing signal loss from reflection. Our overall characterization of wave behavior in a coax cable was successful and our predictions for characteristic impedance and wave speed were very accurate.
 
 \newpage
 
@@ -198,6 +213,8 @@ We investigated pulse propagation in a \qty{156}{\meter} RG-58 coax cable, testi
   GeeksforGeeks, ``What is Coaxial Cable?'' \url{https://www.geeksforgeeks.org/computer-networks/what-is-coaxial-cable/}
   \bibitem{copilot}
   GitHub Copilot GPT-5.1, AI-powered code completion tool by GitHub. Used for assistance with Python code development and \LaTeX\ formatting. \url{https://github.com/features/copilot}
+
+  \bibitem{spec} https://mroelectronics.com/wp-content/uploads/2024/01/data-sheet-RG58.pdf
 \end{thebibliography}
 
 \section*{Addendum}
