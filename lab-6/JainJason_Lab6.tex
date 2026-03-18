@@ -42,11 +42,11 @@ The three crucial components of this circuit are the op-amp, capacitor, and volt
         V_\text{out} = G_0(V_+-V_-)
 \end{equation}
 
-A capacitor stores charge, and while charging, assuming a start voltage $V(0) = V_0$ and a saturation voltage $V(\infty)=V_f$,
+A capacitor is a device that stores charge. If while charging, the total change in voltage is $\Delta V$ and starting voltage is $V(0)=V_0$, then the voltage at time $t$ is found with
 
 \begin{equation}
         \label{cap}
-        V\left(t\right)=V_{0}+\left(V_{f}-V_{0}\right)\left(1-e^{-\frac{t}{T}}\right)
+        V\left(t\right)=V_0+\Delta V\left(1-e^{-\frac{t}{T}}\right)
 \end{equation}
 
 Given two resistors $R_1, \ R_2$, a voltage divider sets a threshold voltage, weighted by each resistance.
@@ -106,20 +106,18 @@ Circuit~\ref{fig:circuit} takes input power $\qty{+5}{\volt}$ and feeds it into 
 
 The positive feedback ($V_+$) is stabilized by another voltage divider with $R_1=R_2=\qty{10}{\kilo\ohm}$. Plugging into Eq\eqref{eq:vdivider}:
 
-$$V_+(t)  = V_{\text{ref}} +  \frac{1}{2} V_\text{out}(t)$$
+\begin{equation}
+        \label{vplus}
+        V_+(t)  =   \frac{1}{2} V_\text{out}(t)
+\end{equation}
 
-The interesting physics happens in the negative feedback ($V_-$), connected to a capacitor-resistor circuit with exponential charge/discharge. When the capacitor drops below the critical threshold $V_-<V_+$, the amplified output from Eq~\eqref{opamp} will immediately create a positive voltage and force a charge cycle. Likewise, when the capacitor charges above $V_->V_+$, a negative voltage will force a discharge cycle. In either case, the op-amp will quickly reach  maximum saturation voltage $\pm V_S$, which will be the amplitude of our wave-form. We can find negative feedback according to Eq~\eqref{cap}, for $V_0=-V_S, \ V_f=V_S$, with an offset $V_\text{ref}$:
+The interesting physics happens in the negative feedback ($V_-$), connected to a capacitor-resistor circuit with exponential charge/discharge. When the capacitor drops below the critical threshold $V_-<V_+$, the amplified output from Eq~\eqref{opamp} will immediately create a positive voltage and force a charge cycle. Likewise, when the capacitor charges above $V_->V_+$, a negative voltage will force a discharge cycle. In either case, the op-amp will quickly reach  maximum saturation voltage $V_\text{out}=\pm V_S$, which will be the amplitude of our wave-form.
 
-$$V_-(t)=V_\text{ref}-V_{S}+2V_S(1-e^{-t/\tau})=V_\text{ref}+V_S-2V_Se^{-t/\tau}$$
-
-
-Solving $V_-=V_+$ at $V_\text{out}=V_S$ can give us the "flipping" time, which should be a half-period of the oscillation.
-
+Solving $V_-=V_+$ at $V_\text{out}=V_S$ can give us the "flipping" time, which should be a half-period of the oscillation. By Eq~\eqref{vplus}, the positive feedback is constrained by $\pm V_+(t) = \pm V_S / 2$ at saturation. This must also be the negative feedback constraint, since the op-amp is working to equalize the two inputs. Let $t$ be the time for the capacitor to go from $V_-=-V_S / 2$ to $V_-=+V_S / 2$.
 
 \begin{align*}
-        V_{\text{ref}} +  \frac{V_S }{2} & = V_\text{ref}+V_S-2V_Se^{-t/\tau} \\[0.5em]
-        \frac{V_S }{2}                   & = V_S-2V_S\,e^{-t/\tau}            \\[0.5em]
-        \frac{1}{2}                      & = 1-2e^{-t/\tau}
+        \frac{V_S }{2} & = -\frac{V_S}{2}+V_S(1-e^{(-t/ \tau)}) \\[0.5em]
+        \frac{1}{2}    & = 1-2e^{-t/\tau}
 \end{align*}
 
 
