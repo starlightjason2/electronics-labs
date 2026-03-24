@@ -112,7 +112,7 @@ def plot_traces(t, v_out, v_probe, trans, out_path):
 
         for i, (sl, popt, model) in enumerate(fits):
             A, tau, V0 = popt
-            model_name = "Charge" if model is exp_charge else "Discharge"
+            model_name = "Charge Fit" if model is exp_charge else "Discharge Fit"
 
             # Extend the fit beyond the segment, fading out
             t_start = t[sl.start]
@@ -120,6 +120,11 @@ def plot_traces(t, v_out, v_probe, trans, out_path):
             t_extend = np.linspace(0, t_ms[-1] / 1e3 - t_start, 500)
             t_plot = (t_extend + t_start) * 1e3
             v_plot = model(t_extend, *popt)
+
+            if model is exp_charge:
+                eq_str = rf"{model_name}: $V_0+A(1-e^{{-t/\tau}})$"
+            else:
+                eq_str = rf"{model_name}: $V_0+Ae^{{-t/\tau}}$"
 
             # Solid on fitted region, faded beyond
             in_seg = t_plot <= t_end * 1e3
@@ -130,7 +135,7 @@ def plot_traces(t, v_out, v_probe, trans, out_path):
                 ls="--",
                 lw=1.8,
                 label=add_equation_text(
-                    rf"{model_name}: $V_0+Ae^{{-t/\tau}}$",
+                    eq_str,
                     {"A": (A, "V"), r"\tau": (tau, "s"), "V_0": (V0, "V")},
                 ),
             )

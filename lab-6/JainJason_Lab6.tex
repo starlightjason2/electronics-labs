@@ -149,14 +149,14 @@ We then connected a two-channel oscilloscope to the test point (TP) and op-amp o
 \begin{figure}[H]
         \centering
         \includegraphics[width=\columnwidth]{output/oscillator_75nF_3.2kOhm.png}
-        \caption{Oscillator traces for $C = \qty{75}{\nano\farad}$, $R = \qty{3.2}{\kilo\ohm}$. The op-amp output (left) is a square wave; the test point (right, AC-coupled) shows the capacitor charging/discharging. Dashed curves show fits of Eq~\eqref{cap_charge} to the first charge (green) and discharge (purple) half-cycle. AC coupling on the oscilloscope offsets the waveform to symmetry around $\qty{0}{\volt}$. }
+        \caption{Oscillator traces for $C = \qty{75}{\nano\farad}$, $R = \qty{3.2}{\kilo\ohm}$. The op-amp output (left) is a square wave; the test point (right, AC-coupled) shows the capacitor charging/discharging. Dashed curves show fits of Eq~\eqref{cap_charge} to the first charge (green) and discharge (purple) half-cycle.}
         \label{fig:osc_75nF}
 \end{figure}
 
 \begin{figure}[H]
         \centering
         \includegraphics[width=\columnwidth]{output/oscillator_9.3microF_3.2kOhm.png}
-        \caption{Oscillator traces for $C = \qty{9.3}{\micro\farad}$, $R = \qty{3.2}{\kilo\ohm}$ (AC-coupled). The larger capacitance produces a much slower oscillation of $\approx\qty{15}{\hertz}$ visible to the naked eye. Dashed curves show fits of Eq~\eqref{cap_charge} for one charge/discharge cycle. AC coupling on the oscilloscope offsets the waveform to symmetry around $\qty{0}{\volt}$. }
+        \caption{Oscillator traces for $C = \qty{9.3}{\micro\farad}$, $R = \qty{3.2}{\kilo\ohm}$ (AC-coupled). The larger capacitance produces a much slower oscillation of $\approx\qty{15}{\hertz}$ visible to the naked eye. Dashed curves show fits of Eq~\eqref{cap_charge} for one charge/discharge cycle. Note that at lower frequencies, the output waveform is not a clean square, showing the limitations of an ideal op-amp model.  }
         \label{fig:osc_9uF}
 \end{figure}
 
@@ -190,7 +190,7 @@ Both measurements give a percent difference of $\approx 5\%$ from theory. The op
 
 
 
-The RC oscillator's behavior is driven by the mighty op-amp juggling positive and negative feedback in a perpetual oscillation. A voltage divider along the positive feedback path sets switching thresholds at $V_+=\qty{1}{\volt}$ and $\qty{3.5}{\volt}$; the dogged capacitor on the negative feedback loop charges/discharges in pursuit, but the elusive $V_+$ immediately switches thresholds when it catches up. We derived the oscillation period $T\approx 2.2\tau$ (Eq~\eqref{period_th}) from the capacitor charge/discharge equations, and verified it across three capacitor values: a stopwatch measurement with $C=\qty{100}{\micro\farad}$ matched within 8\%, and oscilloscope measurements with $C=\qty{75}{\nano\farad}$ and $C=\qty{9.3}{\micro\farad}$ matched within $\approx 5\%$ (Table~\ref{tab:freq}). The theoretical exponential fit on the probe traces (Figures~\ref{fig:osc_75nF},~\ref{fig:osc_9uF}) further confirming the model, and revealing the asymmetric duty cycle ($t_1 \neq t_2$) that we derived in thoery. This simple circuit reliably converts a DC supply into a tunable AC square wave, with diverse applications in function generators, AC-DC converters, or music-boxes for upstairs neighbors everywhere.
+The RC oscillator's behavior is driven by the mighty op-amp juggling positive and negative feedback in a perpetual oscillation. A voltage divider along the positive feedback path sets switching thresholds at $V_+=\qty{1}{\volt}$ and $\qty{3.5}{\volt}$; the dogged capacitor on the negative feedback loop charges/discharges in pursuit, but the elusive $V_+$ immediately switches thresholds when it catches up. We derived the oscillation period $T\approx 2.2\tau$ (Eq~\eqref{period_th}) from the capacitor charge/discharge equations, and verified it across three capacitor values: a stopwatch measurement with $C=\qty{100}{\micro\farad}$ matched within 8\%, and oscilloscope measurements with $C=\qty{75}{\nano\farad}$ and $C=\qty{9.3}{\micro\farad}$ matched within $\approx 5\%$ (Table~\ref{tab:freq}). The theoretical exponential fit the probe traces very well (Figures~\ref{fig:osc_75nF},~\ref{fig:osc_9uF}) further confirming the model and illustrating the asymmetric duty cycle ($t_1 \neq t_2$) that we derived in thoery. This simple circuit reliably converts a DC supply into a tunable AC square wave, with diverse applications in function generators, AC-DC converters, or music-boxes for upstairs neighbors everywhere.
 
 \begin{thebibliography}{9}
         \bibitem{gingrich}
